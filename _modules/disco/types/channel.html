@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.types.channel &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.types.channel</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.types.channel</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">holster.enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">disco.types.base</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">snowflake</span><span class="p">,</span> <span class="n">enum</span><span class="p">,</span> <span class="n">listof</span><span class="p">,</span> <span class="n">dictof</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">disco.types.permissions</span> <span class="k">import</span> <span class="n">PermissionValue</span>
+
+<span class="kn">from</span> <span class="nn">disco.util.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">disco.types.user</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">disco.types.permissions</span> <span class="k">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">Permissible</span>
+<span class="kn">from</span> <span class="nn">disco.voice.client</span> <span class="k">import</span> <span class="n">VoiceClient</span>
+
+
+<span class="n">ChannelType</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+    <span class="n">GUILD_TEXT</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">DM</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">GUILD_VOICE</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">GROUP_DM</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">PermissionOverwriteType</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+    <span class="n">ROLE</span><span class="o">=</span><span class="s1">&#39;role&#39;</span><span class="p">,</span>
+    <span class="n">MEMBER</span><span class="o">=</span><span class="s1">&#39;member&#39;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="PermissionOverwrite"><a class="viewcode-back" href="../../../api.html#disco.types.channel.PermissionOverwrite">[docs]</a><span class="k">class</span> <span class="nc">PermissionOverwrite</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A PermissionOverwrite for a :class:`Channel`</span>
+
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The overwrite ID</span>
+<span class="sd">    type : :const:`disco.types.channel.PermissionsOverwriteType`</span>
+<span class="sd">        The overwrite type</span>
+<span class="sd">    allowed : :class:`PermissionValue`</span>
+<span class="sd">        All allowed permissions</span>
+<span class="sd">    denied : :class:`PermissionValue`</span>
+<span class="sd">        All denied permissions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">enum</span><span class="p">(</span><span class="n">PermissionOverwriteType</span><span class="p">)</span>
+    <span class="n">allow</span> <span class="o">=</span> <span class="n">PermissionValue</span>
+    <span class="n">deny</span> <span class="o">=</span> <span class="n">PermissionValue</span></div>
+
+
+<div class="viewcode-block" id="Channel"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel">[docs]</a><span class="k">class</span> <span class="nc">Channel</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">Permissible</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a Discord Channel</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The channel ID.</span>
+<span class="sd">    guild_id : Optional[snowflake]</span>
+<span class="sd">        The guild id this channel is part of.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The channels name.</span>
+<span class="sd">    topic : str</span>
+<span class="sd">        The channels topic.</span>
+<span class="sd">    position : int</span>
+<span class="sd">        The channels position.</span>
+<span class="sd">    bitrate : int</span>
+<span class="sd">        The channels bitrate.</span>
+<span class="sd">    recipients: list(:class:`disco.types.user.User`)</span>
+<span class="sd">        Members of this channel (if this is a DM channel).</span>
+<span class="sd">    type : :const:`ChannelType`</span>
+<span class="sd">        The type of this channel.</span>
+<span class="sd">    overwrites : dict(snowflake, :class:`disco.types.channel.PermissionOverwrite`)</span>
+<span class="sd">        Channel permissions overwrites.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">guild_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">topic</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">_last_message_id</span> <span class="o">=</span> <span class="n">alias</span><span class="p">(</span><span class="n">snowflake</span><span class="p">,</span> <span class="s1">&#39;last_message_id&#39;</span><span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">bitrate</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">recipients</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">enum</span><span class="p">(</span><span class="n">ChannelType</span><span class="p">)</span>
+    <span class="n">overwrites</span> <span class="o">=</span> <span class="n">alias</span><span class="p">(</span><span class="n">dictof</span><span class="p">(</span><span class="n">PermissionOverwrite</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">),</span> <span class="s1">&#39;permission_overwrites&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Channel.get_permissions"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the permissions a user has in the channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.permissions.PermissionValue`</span>
+<span class="sd">            Computed permission value for the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">ADMINISTRATOR</span>
+
+        <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_permissions</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ow</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrites</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ow</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span> <span class="n">ow</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">roles</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">base</span> <span class="o">-=</span> <span class="n">ow</span><span class="o">.</span><span class="n">deny</span>
+            <span class="n">base</span> <span class="o">+=</span> <span class="n">ow</span><span class="o">.</span><span class="n">allow</span>
+
+        <span class="k">return</span> <span class="n">base</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether this channel belongs to a guild</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">GUILD_TEXT</span><span class="p">,</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">GUILD_VOICE</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_dm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether this channel is a DM (does not belong to a guild)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">DM</span><span class="p">,</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">GROUP_DM</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether this channel supports voice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">GUILD_VOICE</span><span class="p">,</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">GROUP_DM</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">last_message_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the ID of the last message sent in this channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_message_id</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">messages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        a default :class:`MessageIterator` for the channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages_iter</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Channel.messages_iter"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.messages_iter">[docs]</a>    <span class="k">def</span> <span class="nf">messages_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`MessageIterator` for the channel with the given</span>
+<span class="sd">        keyword arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MessageIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_message_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">guild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Guild this channel belongs to (if relevant)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">guilds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Channel.get_invites"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.get_invites">[docs]</a>    <span class="k">def</span> <span class="nf">get_invites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list(:class:`disco.types.invite.Invite`)</span>
+<span class="sd">            All invites for this channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_invites_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Channel.get_pins"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.get_pins">[docs]</a>    <span class="k">def</span> <span class="nf">get_pins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list(:class:`disco.types.message.Message`)</span>
+<span class="sd">            All pinned messages for this channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_pins_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Channel.send_message"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.send_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">nonce</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a message in this channel</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content : str</span>
+<span class="sd">            The message contents to send.</span>
+<span class="sd">        nonce : Optional[snowflake]</span>
+<span class="sd">            The nonce to attach to the message.</span>
+<span class="sd">        tts : Optional[bool]</span>
+<span class="sd">            Whether this is a TTS message.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.message.Message`</span>
+<span class="sd">            The created message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_messages_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">tts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Channel.connect"><a class="viewcode-back" href="../../../api.html#disco.types.channel.Channel.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connect to this channel over voice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_voice</span><span class="p">,</span> <span class="s1">&#39;Channel must support voice to connect&#39;</span>
+        <span class="n">vc</span> <span class="o">=</span> <span class="n">VoiceClient</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vc</span></div></div>
+
+
+<div class="viewcode-block" id="MessageIterator"><a class="viewcode-back" href="../../../api.html#disco.types.channel.MessageIterator">[docs]</a><span class="k">class</span> <span class="nc">MessageIterator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An iterator which supports scanning through the messages for a channel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    client : :class:`disco.client.Client`</span>
+<span class="sd">        The disco client instance to use when making requests.</span>
+<span class="sd">    channel : `Channel`</span>
+<span class="sd">        The channel to iterate within.</span>
+<span class="sd">    direction : :attr:`MessageIterator.Direction`</span>
+<span class="sd">        The direction in which this iterator will move.</span>
+<span class="sd">    bulk : bool</span>
+<span class="sd">        If true, this iterator will yield messages in list batches, otherwise each</span>
+<span class="sd">        message will be yield individually.</span>
+<span class="sd">    before : snowflake</span>
+<span class="sd">        The message to begin scanning at.</span>
+<span class="sd">    after : snowflake</span>
+<span class="sd">        The message to begin scanning at.</span>
+<span class="sd">    chunk_size : int</span>
+<span class="sd">        The number of messages to request per API call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Direction</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;UP&#39;</span><span class="p">,</span> <span class="s1">&#39;DOWN&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">UP</span><span class="p">,</span> <span class="n">bulk</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bulk</span> <span class="o">=</span> <span class="n">bulk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="n">before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="n">after</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">before</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">after</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Must specify at most one of before or after&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="p">))</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Direction</span><span class="o">.</span><span class="n">DOWN</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Must specify either before or after for downward seeking&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MessageIterator.fill"><a class="viewcode-back" href="../../../api.html#disco.types.channel.MessageIterator.fill">[docs]</a>    <span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fills the internal buffer up with :class:`disco.types.message.Message` objects from the API</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_messages_list</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                <span class="n">before</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">before</span><span class="p">,</span>
+                <span class="n">after</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">,</span>
+                <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Direction</span><span class="o">.</span><span class="n">UP</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">after</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span></div>
+
+    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bulk</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

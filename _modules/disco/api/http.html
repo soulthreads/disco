@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.api.http &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.api.http</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.api.http</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">gevent</span>
+
+<span class="kn">from</span> <span class="nn">holster.enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">disco.util.logging</span> <span class="k">import</span> <span class="n">LoggingClass</span>
+<span class="kn">from</span> <span class="nn">disco.api.ratelimit</span> <span class="k">import</span> <span class="n">RateLimiter</span>
+
+<span class="c1"># Enum of all HTTP methods used</span>
+<span class="n">HTTPMethod</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+    <span class="n">GET</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+    <span class="n">POST</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+    <span class="n">PUT</span><span class="o">=</span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span>
+    <span class="n">PATCH</span><span class="o">=</span><span class="s1">&#39;PATCH&#39;</span><span class="p">,</span>
+    <span class="n">DELETE</span><span class="o">=</span><span class="s1">&#39;DELETE&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Routes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple Python object-enum of all method/url route combinations available to</span>
+<span class="sd">    this client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Gateway</span>
+    <span class="n">GATEWAY_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="s1">&#39;/gateway&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Channels</span>
+    <span class="n">CHANNELS</span> <span class="o">=</span> <span class="s1">&#39;/channels/</span><span class="si">{channel}</span><span class="s1">&#39;</span>
+    <span class="n">CHANNELS_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">CHANNELS</span><span class="p">)</span>
+    <span class="n">CHANNELS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">CHANNELS</span><span class="p">)</span>
+    <span class="n">CHANNELS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">CHANNELS</span><span class="p">)</span>
+
+    <span class="n">CHANNELS_MESSAGES_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_MESSAGES_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages/</span><span class="si">{message}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_MESSAGES_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_MESSAGES_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages/</span><span class="si">{message}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_MESSAGES_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages/</span><span class="si">{message}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_MESSAGES_DELETE_BULK</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/messages/bulk_delete&#39;</span><span class="p">)</span>
+
+    <span class="n">CHANNELS_PERMISSIONS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PUT</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/permissions/</span><span class="si">{permission}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_PERMISSIONS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/permissions/</span><span class="si">{permission}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_INVITES_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/invites&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_INVITES_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/invites&#39;</span><span class="p">)</span>
+
+    <span class="n">CHANNELS_PINS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/pins&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_PINS_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PUT</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/pins/</span><span class="si">{pin}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">CHANNELS_PINS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">CHANNELS</span> <span class="o">+</span> <span class="s1">&#39;/pins/</span><span class="si">{pin}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Guilds</span>
+    <span class="n">GUILDS</span> <span class="o">=</span> <span class="s1">&#39;/guilds/</span><span class="si">{guild}</span><span class="s1">&#39;</span>
+    <span class="n">GUILDS_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span><span class="p">)</span>
+    <span class="n">GUILDS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span><span class="p">)</span>
+    <span class="n">GUILDS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">GUILDS</span><span class="p">)</span>
+    <span class="n">GUILDS_CHANNELS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/channels&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_CHANNELS_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/channels&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_CHANNELS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/channels&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_MEMBERS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/members&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_MEMBERS_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/members/</span><span class="si">{member}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_MEMBERS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/members/</span><span class="si">{member}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_MEMBERS_KICK</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/members/</span><span class="si">{member}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_BANS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/bans&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_BANS_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PUT</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/bans/</span><span class="si">{user}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_BANS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/bans/</span><span class="si">{user}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_ROLES_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/roles&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_ROLES_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/roles&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_ROLES_MODIFY_BATCH</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/roles&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_ROLES_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/roles/</span><span class="si">{role}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_ROLES_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/roles/</span><span class="si">{role}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_PRUNE_COUNT</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/prune&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_PRUNE_BEGIN</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/prune&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_VOICE_REGIONS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/regions&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INVITES_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/invites&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INTEGRATIONS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/integrations&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INTEGRATIONS_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/integrations&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INTEGRATIONS_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/integrations/</span><span class="si">{integration}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INTEGRATIONS_DELETE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/integrations/</span><span class="si">{integration}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_INTEGRATIONS_SYNC</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/integrations/</span><span class="si">{integration}</span><span class="s1">/sync&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_EMBED_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/embed&#39;</span><span class="p">)</span>
+    <span class="n">GUILDS_EMBED_MODIFY</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">GUILDS</span> <span class="o">+</span> <span class="s1">&#39;/embed&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Users</span>
+    <span class="n">USERS</span> <span class="o">=</span> <span class="s1">&#39;/users&#39;</span>
+    <span class="n">USERS_ME_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_PATCH</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_GUILDS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me/guilds&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_GUILDS_LEAVE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me/guilds/</span><span class="si">{guild}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_DMS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me/channels&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_DMS_CREATE</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me/channels&#39;</span><span class="p">)</span>
+    <span class="n">USERS_ME_CONNECTIONS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/@me/connections&#39;</span><span class="p">)</span>
+    <span class="n">USERS_GET</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTTPMethod</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">USERS</span> <span class="o">+</span> <span class="s1">&#39;/</span><span class="si">{user}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="APIException"><a class="viewcode-back" href="../../../api.html#disco.api.http.APIException">[docs]</a><span class="k">class</span> <span class="nc">APIException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception thrown when an HTTP-client level error occurs. Usually this will</span>
+<span class="sd">    be a non-success status-code, or a transient network issue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="n">status_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_code</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39; code: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status_code</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HTTPClient"><a class="viewcode-back" href="../../../api.html#disco.api.http.HTTPClient">[docs]</a><span class="k">class</span> <span class="nc">HTTPClient</span><span class="p">(</span><span class="n">LoggingClass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple HTTP client which wraps the requests library, adding support for</span>
+<span class="sd">    Discords rate-limit headers, authorization, and request/response validation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://discordapp.com/api/v6&#39;</span>
+    <span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HTTPClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bot &#39;</span> <span class="o">+</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HTTPClient.call"><a class="viewcode-back" href="../../../api.html#disco.api.http.HTTPClient.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes a request to the given route (as specified in</span>
+<span class="sd">        :class:`disco.api.http.Routes`) with a set of URL arguments, and keyword</span>
+<span class="sd">        arguments passed to requests.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        route : tuple(:class:`HTTPMethod`, str)</span>
+<span class="sd">            The method.URL combination that when compiled with URL arguments</span>
+<span class="sd">            creates a requestable route which the HTTPClient will make the</span>
+<span class="sd">            request too.</span>
+<span class="sd">        args : dict(str, str)</span>
+<span class="sd">            A dictionary of URL arguments that will be compiled with the raw URL</span>
+<span class="sd">            to create the requestable route. The HTTPClient uses this to track</span>
+<span class="sd">            rate limits as well.</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Keyword arguments that will be passed along to the requests library</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">            Raised when an unrecoverable error occurs, or when we&#39;ve exhausted</span>
+<span class="sd">            the number of retries.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`requests.Response`</span>
+<span class="sd">            The response object for the request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">args</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">retry</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;retry_number&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Merge or set headers</span>
+        <span class="k">if</span> <span class="s1">&#39;headers&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
+
+        <span class="c1"># Build the bucket URL</span>
+        <span class="n">filtered</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">v</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;guild&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">filtered</span><span class="p">))</span>
+
+        <span class="c1"># Possibly wait if we&#39;re rate limited</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limiter</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
+
+        <span class="c1"># Make the actual request</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Update rate limiter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limiter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+        <span class="c1"># If we got a success status code, just return the data</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">r</span>
+        <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">429</span> <span class="ow">and</span> <span class="mi">400</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">APIException</span><span class="p">(</span><span class="s1">&#39;Request failed&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request responded w/ 429, retrying (but this should not happen, check your clock sync&#39;</span><span class="p">)</span>
+
+            <span class="c1"># If we hit the max retries, throw an error</span>
+            <span class="n">retry</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">retry</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failing request, hit max retries&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">APIException</span><span class="p">(</span><span class="s1">&#39;Request failed after </span><span class="si">{}</span><span class="s1"> attempts&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+            <span class="n">backoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_backoff</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request to `</span><span class="si">{}</span><span class="s1">` failed with code </span><span class="si">{}</span><span class="s1">, retrying after </span><span class="si">{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">backoff</span><span class="p">))</span>
+            <span class="n">gevent</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">backoff</span><span class="p">)</span>
+
+            <span class="c1"># Otherwise just recurse and try again</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">retry_number</span><span class="o">=</span><span class="n">retry</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HTTPClient.random_backoff"><a class="viewcode-back" href="../../../api.html#disco.api.http.HTTPClient.random_backoff">[docs]</a>    <span class="k">def</span> <span class="nf">random_backoff</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a random backoff (in milliseconds) to be used for any error the</span>
+<span class="sd">        client suspects is transient. Will always return a value between 500 and</span>
+<span class="sd">        5000 milliseconds.</span>
+
+<span class="sd">        :returns: a random backoff in milliseconds</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

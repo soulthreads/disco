@@ -1,0 +1,2639 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Utilities" href="utilities.html"/>
+        <link rel="prev" title="Tutorial" href="tutorial.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-information">Version Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-disco.state">State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-disco.cli">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.channel">Channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.guild">Guild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.message">Message</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.user">User</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.voice">Voice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.invite">Invite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.types.permissions">Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-disco.bot.bot">Bot Toolkit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.bot.plugin">Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.bot.command">Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-disco.bot.parser">Command Argument Parser</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gateway-api">Gateway API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gatewayclient">GatewayClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gateway-events">Gateway Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rest-api">REST API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apiclient">APIClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#http-utilities">HTTP Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ratelimit-utilities">Ratelimit Utilities</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-information">
+<h2>Version Information<a class="headerlink" href="#version-information" title="Permalink to this headline">¶</a></h2>
+<p>disco exports a top-level variable that can be used to introspect the current
+version information for the installed package.</p>
+<dl class="data">
+<dt id="disco.VERSION">
+<code class="descclassname">disco.</code><code class="descname">VERSION</code><a class="headerlink" href="#disco.VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string representation of the current version, in standard semantic
+versioning format. E.g. <code class="docutils literal"><span class="pre">'5.4.3-rc.2'</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="client">
+<h2>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="disco.client.Client">
+<em class="property">class </em><code class="descclassname">disco.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.client.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing the base entry point that should be used in almost all
+implementation cases. This class wraps the functionality of both the REST API
+(<a class="reference internal" href="#disco.api.client.APIClient" title="disco.api.client.APIClient"><code class="xref py py-class docutils literal"><span class="pre">disco.api.client.APIClient</span></code></a>) and the realtime gateway API
+(<a class="reference internal" href="#disco.gateway.client.GatewayClient" title="disco.gateway.client.GatewayClient"><code class="xref py py-class docutils literal"><span class="pre">disco.gateway.client.GatewayClient</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<code class="xref py py-class docutils literal"><span class="pre">ClientConfig</span></code>) &#8211; Configuration for this client instance.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="disco.Client.config">
+<code class="descname">config</code><a class="headerlink" href="#disco.Client.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">ClientConfig</span></code> &#8211; The runtime configuration for this client.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.events">
+<code class="descname">events</code><a class="headerlink" href="#disco.Client.events" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">Emitter</span></code> &#8211; An emitter which emits Gateway events.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.packets">
+<code class="descname">packets</code><a class="headerlink" href="#disco.Client.packets" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">Emitter</span></code> &#8211; An emitter which emits Gateway packets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.state">
+<code class="descname">state</code><a class="headerlink" href="#disco.Client.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">State</span></code> &#8211; The state tracking object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.api">
+<code class="descname">api</code><a class="headerlink" href="#disco.Client.api" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">APIClient</span></code> &#8211; The API client.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.gw">
+<code class="descname">gw</code><a class="headerlink" href="#disco.Client.gw" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">GatewayClient</span></code> &#8211; The gateway client.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.manhole_locals">
+<code class="descname">manhole_locals</code><a class="headerlink" href="#disco.Client.manhole_locals" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> &#8211; Dictionary of local variables for each manhole connection. This can be
+modified to add/modify local variables.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.Client.manhole">
+<code class="descname">manhole</code><a class="headerlink" href="#disco.Client.manhole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional[<code class="xref py py-class docutils literal"><span class="pre">BackdoorServer</span></code>] &#8211; Gevent backdoor server (if the manhole is enabled).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.client.Client.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/client.html#Client.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.client.Client.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the client (e.g. the <code class="xref py py-class docutils literal"><span class="pre">GatewayClient</span></code>) in a new greenlet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.client.Client.run_forever">
+<code class="descname">run_forever</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/client.html#Client.run_forever"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.client.Client.run_forever" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the client (e.g. the <code class="xref py py-class docutils literal"><span class="pre">GatewayClient</span></code>) in the current greenlet</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.state">
+<span id="state"></span><h2>State<a class="headerlink" href="#module-disco.state" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="disco.state.StackMessage">
+<em class="property">class </em><code class="descclassname">disco.state.</code><code class="descname">StackMessage</code><a class="reference internal" href="_modules/disco/state.html#StackMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.state.StackMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A message stored on a stack inside of the state object, used for tracking
+previously sent messages in channels.</p>
+<dl class="attribute">
+<dt id="disco.state.StackMessage.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.state.StackMessage.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; the id of the message</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.StackMessage.channel_id">
+<code class="descname">channel_id</code><a class="headerlink" href="#disco.state.StackMessage.channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; the id of the channel this message was sent in</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.StackMessage.author_id">
+<code class="descname">author_id</code><a class="headerlink" href="#disco.state.StackMessage.author_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; the id of the author of this message</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.state.State">
+<em class="property">class </em><code class="descclassname">disco.state.</code><code class="descname">State</code><span class="sig-paren">(</span><em>client</em>, <em>config=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/state.html#State"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.state.State" title="Permalink to this definition">¶</a></dt>
+<dd><p>The State class is used to track global state based on events emitted from
+the <code class="xref py py-class docutils literal"><span class="pre">GatewayClient</span></code>. State tracking is a core component of the Disco
+client, providing the mechanism for most of the higher-level utility functions.</p>
+<dl class="attribute">
+<dt id="disco.state.State.EVENTS">
+<code class="descname">EVENTS</code><a class="headerlink" href="#disco.state.State.EVENTS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(str)</em> &#8211; A list of all events the State object binds too.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.client">
+<code class="descname">client</code><a class="headerlink" href="#disco.state.State.client" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.client.Client" title="disco.client.Client"><code class="xref py py-class docutils literal"><span class="pre">disco.client.Client</span></code></a> &#8211; The Client instance this state is attached too</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.config">
+<code class="descname">config</code><a class="headerlink" href="#disco.state.State.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.state.StateConfig" title="disco.state.StateConfig"><code class="xref py py-class docutils literal"><span class="pre">StateConfig</span></code></a> &#8211; The configuration for this state instance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.me">
+<code class="descname">me</code><a class="headerlink" href="#disco.state.State.me" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code> &#8211; The currently logged in user</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.dms">
+<code class="descname">dms</code><a class="headerlink" href="#disco.state.State.dms" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.channel.Channel" title="disco.types.channel.Channel"><code class="xref py py-class docutils literal"><span class="pre">disco.types.channel.Channel</span></code></a>) &#8211; Mapping of all known DM Channels</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.guilds">
+<code class="descname">guilds</code><a class="headerlink" href="#disco.state.State.guilds" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.guild.Guild" title="disco.types.guild.Guild"><code class="xref py py-class docutils literal"><span class="pre">disco.types.guild.Guild</span></code></a>) &#8211; Mapping of all known/loaded Guilds</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.channels">
+<code class="descname">channels</code><a class="headerlink" href="#disco.state.State.channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.channel.Channel" title="disco.types.channel.Channel"><code class="xref py py-class docutils literal"><span class="pre">disco.types.channel.Channel</span></code></a>) &#8211; Weak mapping of all known/loaded Channels</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.users">
+<code class="descname">users</code><a class="headerlink" href="#disco.state.State.users" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code>) &#8211; Weak mapping of all known/loaded Users</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.voice_states">
+<code class="descname">voice_states</code><a class="headerlink" href="#disco.state.State.voice_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(str, <code class="xref py py-class docutils literal"><span class="pre">disco.types.voice.VoiceState</span></code>) &#8211; Weak mapping of all known/active Voice States</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.State.messages">
+<code class="descname">messages</code><a class="headerlink" href="#disco.state.State.messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional[dict(snowflake, <code class="xref py py-class docutils literal"><span class="pre">deque</span></code>)] &#8211; Mapping of channel ids to deques containing <a class="reference internal" href="#disco.state.StackMessage" title="disco.state.StackMessage"><code class="xref py py-class docutils literal"><span class="pre">StackMessage</span></code></a> objects</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.state.State.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/state.html#State.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.state.State.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binds all events for this state object, storing the listeners for later
+unbinding.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.state.State.unbind">
+<code class="descname">unbind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/state.html#State.unbind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.state.State.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unbinds all bound event listeners for this state object</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.state.StateConfig">
+<em class="property">class </em><code class="descclassname">disco.state.</code><code class="descname">StateConfig</code><a class="reference internal" href="_modules/disco/state.html#StateConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.state.StateConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>A configuration object for determining how the State tracking behaves.</p>
+<dl class="attribute">
+<dt id="disco.state.StateConfig.track_messages">
+<code class="descname">track_messages</code><a class="headerlink" href="#disco.state.StateConfig.track_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether the state store should keep a buffer of previously sent messages.
+Message tracking allows for multiple higher-level shortcuts and can be
+highly useful when developing bots that need to delete their own messages.</p>
+<p>Message tracking is implemented using a deque and a namedtuple, meaning
+it should generally not have a high impact on memory, however users who
+find they do not need and may be experiencing memory pressure can disable
+this feature entirely using this attribute.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.state.StateConfig.track_messages_size">
+<code class="descname">track_messages_size</code><a class="headerlink" href="#disco.state.StateConfig.track_messages_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The size of the deque for each channel. Using this you can calculate the
+total number of possible <a class="reference internal" href="#disco.state.StackMessage" title="disco.state.StackMessage"><code class="xref py py-class docutils literal"><span class="pre">StackMessage</span></code></a> objects kept in memory,
+using: <cite>total_mesages_size * total_channels</cite>. This can be tweaked based
+on usage to help prevent memory pressure.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.cli">
+<span id="cli"></span><h2>CLI<a class="headerlink" href="#module-disco.cli" title="Permalink to this headline">¶</a></h2>
+<p>The CLI module is a small utility that can be used as an easy entry point for
+creating and running bots/clients.</p>
+<dl class="function">
+<dt id="disco.cli.disco_main">
+<code class="descclassname">disco.cli.</code><code class="descname">disco_main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/cli.html#disco_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.cli.disco_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an argument parser and parses a standard set of command line arguments,
+creating a new <code class="xref py py-class docutils literal"><span class="pre">Client</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new Client from the provided command line arguments</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Client</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-disco.types.channel">
+<span id="channel"></span><h3>Channel<a class="headerlink" href="#module-disco.types.channel" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.types.channel.Channel">
+<em class="property">class </em><code class="descclassname">disco.types.channel.</code><code class="descname">Channel</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a Discord Channel</p>
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.channel.Channel.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The channel ID.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.guild_id">
+<code class="descname">guild_id</code><a class="headerlink" href="#disco.types.channel.Channel.guild_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[snowflake]</em> &#8211; The guild id this channel is part of.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.types.channel.Channel.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The channels name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.topic">
+<code class="descname">topic</code><a class="headerlink" href="#disco.types.channel.Channel.topic" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The channels topic.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.position">
+<code class="descname">position</code><a class="headerlink" href="#disco.types.channel.Channel.position" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The channels position.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.bitrate">
+<code class="descname">bitrate</code><a class="headerlink" href="#disco.types.channel.Channel.bitrate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The channels bitrate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.recipients">
+<code class="descname">recipients</code><a class="headerlink" href="#disco.types.channel.Channel.recipients" title="Permalink to this definition">¶</a></dt>
+<dd><p>list(<code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code>) &#8211; Members of this channel (if this is a DM channel).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.type">
+<code class="descname">type</code><a class="headerlink" href="#disco.types.channel.Channel.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-const docutils literal"><span class="pre">ChannelType</span></code> &#8211; The type of this channel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.overwrites">
+<code class="descname">overwrites</code><a class="headerlink" href="#disco.types.channel.Channel.overwrites" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.channel.PermissionOverwrite" title="disco.types.channel.PermissionOverwrite"><code class="xref py py-class docutils literal"><span class="pre">disco.types.channel.PermissionOverwrite</span></code></a>) &#8211; Channel permissions overwrites.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">bitrate</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to this channel over voice</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.get_invites">
+<code class="descname">get_invites</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.get_invites"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.get_invites" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All invites for this channel.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list(<a class="reference internal" href="#disco.types.invite.Invite" title="disco.types.invite.Invite"><code class="xref py py-class docutils literal"><span class="pre">disco.types.invite.Invite</span></code></a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the permissions a user has in the channel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Computed permission value for the user.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">disco.types.permissions.PermissionValue</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.get_pins">
+<code class="descname">get_pins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.get_pins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.get_pins" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All pinned messages for this channel.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list(<a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.is_dm">
+<code class="descname">is_dm</code><a class="headerlink" href="#disco.types.channel.Channel.is_dm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this channel is a DM (does not belong to a guild)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.is_guild">
+<code class="descname">is_guild</code><a class="headerlink" href="#disco.types.channel.Channel.is_guild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this channel belongs to a guild</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.is_voice">
+<code class="descname">is_voice</code><a class="headerlink" href="#disco.types.channel.Channel.is_voice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this channel supports voice</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.last_message_id">
+<code class="descname">last_message_id</code><a class="headerlink" href="#disco.types.channel.Channel.last_message_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of the last message sent in this channel</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.Channel.messages">
+<code class="descname">messages</code><a class="headerlink" href="#disco.types.channel.Channel.messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>a default <a class="reference internal" href="#disco.types.channel.MessageIterator" title="disco.types.channel.MessageIterator"><code class="xref py py-class docutils literal"><span class="pre">MessageIterator</span></code></a> for the channel</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.messages_iter">
+<code class="descname">messages_iter</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.messages_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.messages_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <a class="reference internal" href="#disco.types.channel.MessageIterator" title="disco.types.channel.MessageIterator"><code class="xref py py-class docutils literal"><span class="pre">MessageIterator</span></code></a> for the channel with the given
+keyword arguments</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">position</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.channel.Channel.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>content</em>, <em>nonce=None</em>, <em>tts=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#Channel.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.Channel.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message in this channel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<em>str</em>) &#8211; The message contents to send.</li>
+<li><strong>nonce</strong> (<em>Optional[snowflake]</em>) &#8211; The nonce to attach to the message.</li>
+<li><strong>tts</strong> (<em>Optional[bool]</em>) &#8211; Whether this is a TTS message.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The created message.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.channel.MessageIterator">
+<em class="property">class </em><code class="descclassname">disco.types.channel.</code><code class="descname">MessageIterator</code><span class="sig-paren">(</span><em>client</em>, <em>channel</em>, <em>direction=&lt;EnumAttr up&gt;</em>, <em>bulk=False</em>, <em>before=None</em>, <em>after=None</em>, <em>chunk_size=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#MessageIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.MessageIterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterator which supports scanning through the messages for a channel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>client</strong> (<a class="reference internal" href="#disco.client.Client" title="disco.client.Client"><code class="xref py py-class docutils literal"><span class="pre">disco.client.Client</span></code></a>) &#8211; The disco client instance to use when making requests.</li>
+<li><strong>channel</strong> (<cite>Channel</cite>) &#8211; The channel to iterate within.</li>
+<li><strong>direction</strong> (<code class="xref py py-attr docutils literal"><span class="pre">MessageIterator.Direction</span></code>) &#8211; The direction in which this iterator will move.</li>
+<li><strong>bulk</strong> (<em>bool</em>) &#8211; If true, this iterator will yield messages in list batches, otherwise each
+message will be yield individually.</li>
+<li><strong>before</strong> (<em>snowflake</em>) &#8211; The message to begin scanning at.</li>
+<li><strong>after</strong> (<em>snowflake</em>) &#8211; The message to begin scanning at.</li>
+<li><strong>chunk_size</strong> (<em>int</em>) &#8211; The number of messages to request per API call.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="disco.types.channel.MessageIterator.fill">
+<code class="descname">fill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#MessageIterator.fill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.MessageIterator.fill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills the internal buffer up with <a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a> objects from the API</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.channel.PermissionOverwrite">
+<em class="property">class </em><code class="descclassname">disco.types.channel.</code><code class="descname">PermissionOverwrite</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/channel.html#PermissionOverwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.channel.PermissionOverwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PermissionOverwrite for a <a class="reference internal" href="#disco.types.channel.Channel" title="disco.types.channel.Channel"><code class="xref py py-class docutils literal"><span class="pre">Channel</span></code></a></p>
+<dl class="attribute">
+<dt id="disco.types.channel.PermissionOverwrite.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.channel.PermissionOverwrite.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The overwrite ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.PermissionOverwrite.type">
+<code class="descname">type</code><a class="headerlink" href="#disco.types.channel.PermissionOverwrite.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-const docutils literal"><span class="pre">disco.types.channel.PermissionsOverwriteType</span></code> &#8211; The overwrite type</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.PermissionOverwrite.allowed">
+<code class="descname">allowed</code><a class="headerlink" href="#disco.types.channel.PermissionOverwrite.allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">PermissionValue</span></code> &#8211; All allowed permissions</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.channel.PermissionOverwrite.denied">
+<code class="descname">denied</code><a class="headerlink" href="#disco.types.channel.PermissionOverwrite.denied" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">PermissionValue</span></code> &#8211; All denied permissions</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.types.guild">
+<span id="guild"></span><h3>Guild<a class="headerlink" href="#module-disco.types.guild" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.types.guild.Emoji">
+<em class="property">class </em><code class="descclassname">disco.types.guild.</code><code class="descname">Emoji</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Emoji"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Emoji" title="Permalink to this definition">¶</a></dt>
+<dd><p>An emoji object</p>
+<dl class="attribute">
+<dt id="disco.types.guild.Emoji.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.guild.Emoji.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The ID of this emoji.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Emoji.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.types.guild.Emoji.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of this emoji.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Emoji.require_colons">
+<code class="descname">require_colons</code><a class="headerlink" href="#disco.types.guild.Emoji.require_colons" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this emoji requires colons to use.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Emoji.managed">
+<code class="descname">managed</code><a class="headerlink" href="#disco.types.guild.Emoji.managed" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this emoji is managed by an integration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Emoji.roles">
+<code class="descname">roles</code><a class="headerlink" href="#disco.types.guild.Emoji.roles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(snowflake)</em> &#8211; Roles this emoji is attached to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">managed</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">require_colons</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.guild.Guild">
+<em class="property">class </em><code class="descclassname">disco.types.guild.</code><code class="descname">Guild</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Guild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Guild" title="Permalink to this definition">¶</a></dt>
+<dd><p>A guild object</p>
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.guild.Guild.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The id of this guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.owner_id">
+<code class="descname">owner_id</code><a class="headerlink" href="#disco.types.guild.Guild.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The id of the owner.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.afk_channel_id">
+<code class="descname">afk_channel_id</code><a class="headerlink" href="#disco.types.guild.Guild.afk_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The id of the afk channel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.embed_channel_id">
+<code class="descname">embed_channel_id</code><a class="headerlink" href="#disco.types.guild.Guild.embed_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The id of the embed channel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.types.guild.Guild.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Guilds name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.icon">
+<code class="descname">icon</code><a class="headerlink" href="#disco.types.guild.Guild.icon" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Guilds icon (as PNG binary data).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.splash">
+<code class="descname">splash</code><a class="headerlink" href="#disco.types.guild.Guild.splash" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Guilds splash image (as PNG binary data).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.region">
+<code class="descname">region</code><a class="headerlink" href="#disco.types.guild.Guild.region" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Voice region.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.afk_timeout">
+<code class="descname">afk_timeout</code><a class="headerlink" href="#disco.types.guild.Guild.afk_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Delay after which users are automatically moved to the afk channel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.embed_enabled">
+<code class="descname">embed_enabled</code><a class="headerlink" href="#disco.types.guild.Guild.embed_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether the guilds embed is enabled.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.verification_level">
+<code class="descname">verification_level</code><a class="headerlink" href="#disco.types.guild.Guild.verification_level" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The verification level used by the guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.mfa_level">
+<code class="descname">mfa_level</code><a class="headerlink" href="#disco.types.guild.Guild.mfa_level" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The MFA level used by the guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.features">
+<code class="descname">features</code><a class="headerlink" href="#disco.types.guild.Guild.features" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(str)</em> &#8211; Extra features enabled for this guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.members">
+<code class="descname">members</code><a class="headerlink" href="#disco.types.guild.Guild.members" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.guild.GuildMember" title="disco.types.guild.GuildMember"><code class="xref py py-class docutils literal"><span class="pre">GuildMember</span></code></a>) &#8211; All of the guilds members.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.channels">
+<code class="descname">channels</code><a class="headerlink" href="#disco.types.guild.Guild.channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.channel.Channel" title="disco.types.channel.Channel"><code class="xref py py-class docutils literal"><span class="pre">disco.types.channel.Channel</span></code></a>) &#8211; All of the guilds channels.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.roles">
+<code class="descname">roles</code><a class="headerlink" href="#disco.types.guild.Guild.roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.guild.Role" title="disco.types.guild.Role"><code class="xref py py-class docutils literal"><span class="pre">Role</span></code></a>) &#8211; All of the guilds roles.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.emojis">
+<code class="descname">emojis</code><a class="headerlink" href="#disco.types.guild.Guild.emojis" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <a class="reference internal" href="#disco.types.guild.Emoji" title="disco.types.guild.Emoji"><code class="xref py py-class docutils literal"><span class="pre">Emoji</span></code></a>) &#8211; All of the guilds emojis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Guild.voice_states">
+<code class="descname">voice_states</code><a class="headerlink" href="#disco.types.guild.Guild.voice_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(str, <code class="xref py py-class docutils literal"><span class="pre">disco.types.voice.VoiceState</span></code>) &#8211; All of the guilds voice states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">afk_timeout</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">embed_enabled</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.Guild.get_member">
+<code class="descname">get_member</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Guild.get_member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Guild.get_member" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to get a member from a given user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The guild member object for the given user.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#disco.types.guild.GuildMember" title="disco.types.guild.GuildMember"><code class="xref py py-class docutils literal"><span class="pre">GuildMember</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.Guild.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Guild.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Guild.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the permissions a user has in this guild.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Computed permission value for the user.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">disco.types.permissions.PermissionValue</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.Guild.get_voice_state">
+<code class="descname">get_voice_state</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Guild.get_voice_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Guild.get_voice_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to get a voice state for a given user (who should be a member of
+this guild).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The voice state for the user in this guild.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">disco.types.voice.VoiceState</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mfa_level</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">region</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.guild.GuildMember">
+<em class="property">class </em><code class="descclassname">disco.types.guild.</code><code class="descname">GuildMember</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#GuildMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.GuildMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GuildMember object</p>
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.user">
+<code class="descname">user</code><a class="headerlink" href="#disco.types.guild.GuildMember.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code> &#8211; The user object of this member.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.guild_id">
+<code class="descname">guild_id</code><a class="headerlink" href="#disco.types.guild.GuildMember.guild_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The guild this member is part of.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.mute">
+<code class="descname">mute</code><a class="headerlink" href="#disco.types.guild.GuildMember.mute" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this member is server voice-muted.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.deaf">
+<code class="descname">deaf</code><a class="headerlink" href="#disco.types.guild.GuildMember.deaf" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this member is server voice-deafend.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.joined_at">
+<code class="descname">joined_at</code><a class="headerlink" href="#disco.types.guild.GuildMember.joined_at" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>datetime</em> &#8211; When this user joined the guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.roles">
+<code class="descname">roles</code><a class="headerlink" href="#disco.types.guild.GuildMember.roles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(snowflake)</em> &#8211; Roles this member is part of.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.GuildMember.ban">
+<code class="descname">ban</code><span class="sig-paren">(</span><em>delete_message_days=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#GuildMember.ban"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.GuildMember.ban" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bans the member from the guild.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>delete_message_days</strong> (<em>int</em>) &#8211; The number of days to retroactively delete messages for.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">deaf</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.GuildMember.get_voice_state">
+<code class="descname">get_voice_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#GuildMember.get_voice_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.GuildMember.get_voice_state" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns the voice state for the member if they are currently connected
+to the guilds voice server.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Optional[<code class="xref py py-class docutils literal"><span class="pre">disco.types.voice.VoiceState</span></code>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.GuildMember.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.guild.GuildMember.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias to the guild members user id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.guild.GuildMember.kick">
+<code class="descname">kick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#GuildMember.kick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.GuildMember.kick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kicks the member from the guild.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mute</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.guild.Role">
+<em class="property">class </em><code class="descclassname">disco.types.guild.</code><code class="descname">Role</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/guild.html#Role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.guild.Role" title="Permalink to this definition">¶</a></dt>
+<dd><p>A role object</p>
+<dl class="attribute">
+<dt id="disco.types.guild.Role.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.guild.Role.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The role ID.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.types.guild.Role.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em> &#8211; The role name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.hoist">
+<code class="descname">hoist</code><a class="headerlink" href="#disco.types.guild.Role.hoist" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this role is hoisted (displayed separately in the sidebar).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.managed">
+<code class="descname">managed</code><a class="headerlink" href="#disco.types.guild.Role.managed" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this role is managed by an integration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.color">
+<code class="descname">color</code><a class="headerlink" href="#disco.types.guild.Role.color" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The RGB color of this role.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.permissions">
+<code class="descname">permissions</code><a class="headerlink" href="#disco.types.guild.Role.permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">disco.types.permissions.PermissionsValue</span></code> &#8211; The permissions this role grants.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.guild.Role.position">
+<code class="descname">position</code><a class="headerlink" href="#disco.types.guild.Role.position" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The position of this role in the hierarchy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">color</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">hoist</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">managed</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">position</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.types.message">
+<span id="message"></span><h3>Message<a class="headerlink" href="#module-disco.types.message" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.types.message.Message">
+<em class="property">class </em><code class="descclassname">disco.types.message.</code><code class="descname">Message</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a Message created within a Channel on Discord.</p>
+<dl class="attribute">
+<dt id="disco.types.message.Message.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.message.Message.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The ID of this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.channel_id">
+<code class="descname">channel_id</code><a class="headerlink" href="#disco.types.message.Message.channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The channel ID this message was sent in.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.type">
+<code class="descname">type</code><a class="headerlink" href="#disco.types.message.Message.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">MessageType</span></code> &#8211; Type of the message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.author">
+<code class="descname">author</code><a class="headerlink" href="#disco.types.message.Message.author" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code> &#8211; The author of this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.content">
+<code class="descname">content</code><a class="headerlink" href="#disco.types.message.Message.content" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The unicode contents of this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.nonce">
+<code class="descname">nonce</code><a class="headerlink" href="#disco.types.message.Message.nonce" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The nonce of this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.timestamp">
+<code class="descname">timestamp</code><a class="headerlink" href="#disco.types.message.Message.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>datetime</em> &#8211; When this message was created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.edited_timestamp">
+<code class="descname">edited_timestamp</code><a class="headerlink" href="#disco.types.message.Message.edited_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[datetime]</em> &#8211; When this message was last edited.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.tts">
+<code class="descname">tts</code><a class="headerlink" href="#disco.types.message.Message.tts" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this is a TTS (text-to-speech) message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.mention_everyone">
+<code class="descname">mention_everyone</code><a class="headerlink" href="#disco.types.message.Message.mention_everyone" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this message has an &#64;everyone which mentions everyone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.pinned">
+<code class="descname">pinned</code><a class="headerlink" href="#disco.types.message.Message.pinned" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this message is pinned in the channel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.mentions">
+<code class="descname">mentions</code><a class="headerlink" href="#disco.types.message.Message.mentions" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(snowflake, <code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code>) &#8211; All users mentioned within this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.mention_roles">
+<code class="descname">mention_roles</code><a class="headerlink" href="#disco.types.message.Message.mention_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(snowflake)</em> &#8211; All roles mentioned within this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.embeds">
+<code class="descname">embeds</code><a class="headerlink" href="#disco.types.message.Message.embeds" title="Permalink to this definition">¶</a></dt>
+<dd><p>list(<a class="reference internal" href="#disco.types.message.MessageEmbed" title="disco.types.message.MessageEmbed"><code class="xref py py-class docutils literal"><span class="pre">MessageEmbed</span></code></a>) &#8211; All embeds for this message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.Message.attachments">
+<code class="descname">attachments</code><a class="headerlink" href="#disco.types.message.Message.attachments" title="Permalink to this definition">¶</a></dt>
+<dd><p>list(<a class="reference internal" href="#disco.types.message.MessageAttachment" title="disco.types.message.MessageAttachment"><code class="xref py py-class docutils literal"><span class="pre">MessageAttachment</span></code></a>) &#8211; All attachments for this message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.message.Message.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The deleted message object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">Message</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.message.Message.edit">
+<code class="descname">edit</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message.edit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message.edit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<em>str</em>) &#8211; The new edited contents of the message.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The edited message object.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">Message</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.message.Message.is_mentioned">
+<code class="descname">is_mentioned</code><span class="sig-paren">(</span><em>entity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message.is_mentioned"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message.is_mentioned" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the give entity was mentioned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mention_everyone</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">pinned</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.message.Message.replace_mentions">
+<code class="descname">replace_mentions</code><span class="sig-paren">(</span><em>user_replace</em>, <em>role_replace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message.replace_mentions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message.replace_mentions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces user and role mentions with the result of a given lambda/function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_replace</strong> (<em>function</em>) &#8211; A function taking a single argument, the user object mentioned, and
+returning a valid string.</li>
+<li><strong>role_replace</strong> (<em>function</em>) &#8211; A function taking a single argument, the role ID mentioned, and
+returning a valid string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message contents with all valid mentions replaced.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.types.message.Message.reply">
+<code class="descname">reply</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#Message.reply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.Message.reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reply to this message (proxys arguments to
+<a class="reference internal" href="#disco.types.channel.Channel.send_message" title="disco.types.channel.Channel.send_message"><code class="xref py py-func docutils literal"><span class="pre">disco.types.channel.Channel.send_message()</span></code></a>)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The created message object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">Message</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">tts</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.message.MessageAttachment">
+<em class="property">class </em><code class="descclassname">disco.types.message.</code><code class="descname">MessageAttachment</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#MessageAttachment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.MessageAttachment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message attachment object</p>
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.id">
+<code class="descname">id</code><a class="headerlink" href="#disco.types.message.MessageAttachment.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>snowflake</em> &#8211; The id of this attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.filename">
+<code class="descname">filename</code><a class="headerlink" href="#disco.types.message.MessageAttachment.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The filename of this attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.url">
+<code class="descname">url</code><a class="headerlink" href="#disco.types.message.MessageAttachment.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The URL of this attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.proxy_url">
+<code class="descname">proxy_url</code><a class="headerlink" href="#disco.types.message.MessageAttachment.proxy_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The URL to proxy through when downloading the attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.size">
+<code class="descname">size</code><a class="headerlink" href="#disco.types.message.MessageAttachment.size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Size of the attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.height">
+<code class="descname">height</code><a class="headerlink" href="#disco.types.message.MessageAttachment.height" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Height of the attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageAttachment.width">
+<code class="descname">width</code><a class="headerlink" href="#disco.types.message.MessageAttachment.width" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Width of the attachment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">height</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">id</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">proxy_url</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">size</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">url</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">width</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.types.message.MessageEmbed">
+<em class="property">class </em><code class="descclassname">disco.types.message.</code><code class="descname">MessageEmbed</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/message.html#MessageEmbed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.message.MessageEmbed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message embed object</p>
+<dl class="attribute">
+<dt id="disco.types.message.MessageEmbed.title">
+<code class="descname">title</code><a class="headerlink" href="#disco.types.message.MessageEmbed.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Title of the embed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageEmbed.type">
+<code class="descname">type</code><a class="headerlink" href="#disco.types.message.MessageEmbed.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Type of the embed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageEmbed.description">
+<code class="descname">description</code><a class="headerlink" href="#disco.types.message.MessageEmbed.description" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Description of the embed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.message.MessageEmbed.url">
+<code class="descname">url</code><a class="headerlink" href="#disco.types.message.MessageEmbed.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; URL of the embed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">type</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">url</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.types.user">
+<span id="user"></span><h3>User<a class="headerlink" href="#module-disco.types.user" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="module-disco.types.voice">
+<span id="voice"></span><h3>Voice<a class="headerlink" href="#module-disco.types.voice" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="module-disco.types.invite">
+<span id="invite"></span><h3>Invite<a class="headerlink" href="#module-disco.types.invite" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.types.invite.Invite">
+<em class="property">class </em><code class="descclassname">disco.types.invite.</code><code class="descname">Invite</code><span class="sig-paren">(</span><em>obj</em>, <em>client=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/types/invite.html#Invite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.types.invite.Invite" title="Permalink to this definition">¶</a></dt>
+<dd><p>An invite object</p>
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.code">
+<code class="descname">code</code><a class="headerlink" href="#disco.types.invite.Invite.code" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The invite code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.inviter">
+<code class="descname">inviter</code><a class="headerlink" href="#disco.types.invite.Invite.inviter" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">disco.types.user.User</span></code> &#8211; The user who created this invite.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.guild">
+<code class="descname">guild</code><a class="headerlink" href="#disco.types.invite.Invite.guild" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.types.guild.Guild" title="disco.types.guild.Guild"><code class="xref py py-class docutils literal"><span class="pre">disco.types.guild.Guild</span></code></a> &#8211; The guild this invite is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.channel">
+<code class="descname">channel</code><a class="headerlink" href="#disco.types.invite.Invite.channel" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.types.channel.Channel" title="disco.types.channel.Channel"><code class="xref py py-class docutils literal"><span class="pre">disco.types.channel.Channel</span></code></a> &#8211; The channel this invite is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.max_age">
+<code class="descname">max_age</code><a class="headerlink" href="#disco.types.invite.Invite.max_age" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The time after this invites creation at which it expires.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.max_uses">
+<code class="descname">max_uses</code><a class="headerlink" href="#disco.types.invite.Invite.max_uses" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The maximum number of uses.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.uses">
+<code class="descname">uses</code><a class="headerlink" href="#disco.types.invite.Invite.uses" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The current number of times the invite was used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.temporary">
+<code class="descname">temporary</code><a class="headerlink" href="#disco.types.invite.Invite.temporary" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this invite only grants temporary memborship.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.types.invite.Invite.created_at">
+<code class="descname">created_at</code><a class="headerlink" href="#disco.types.invite.Invite.created_at" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>datetime</em> &#8211; When this invite was created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">channel</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Channel</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">code</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">guild</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Guild</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">max_age</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">max_uses</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">temporary</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">uses</code></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.types.permissions">
+<span id="permissions"></span><h3>Permissions<a class="headerlink" href="#module-disco.types.permissions" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="module-disco.bot.bot">
+<span id="bot-toolkit"></span><h2>Bot Toolkit<a class="headerlink" href="#module-disco.bot.bot" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="disco.bot.bot.Bot">
+<em class="property">class </em><code class="descclassname">disco.bot.bot.</code><code class="descname">Bot</code><span class="sig-paren">(</span><em>client</em>, <em>config=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disco&#8217;s implementation of a simple but extendable Discord bot. Bots consist
+of a set of plugins, and a Disco client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>client</strong> (<a class="reference internal" href="#disco.client.Client" title="disco.client.Client"><code class="xref py py-class docutils literal"><span class="pre">disco.client.Client</span></code></a>) &#8211; The client this bot should utilize for its connection.</li>
+<li><strong>config</strong> (Optional[<a class="reference internal" href="#disco.bot.bot.BotConfig" title="disco.bot.bot.BotConfig"><code class="xref py py-class docutils literal"><span class="pre">BotConfig</span></code></a>]) &#8211; The configuration to use for this bot. If not provided will use the defaults
+inside of <a class="reference internal" href="#disco.bot.bot.BotConfig" title="disco.bot.bot.BotConfig"><code class="xref py py-class docutils literal"><span class="pre">BotConfig</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="disco.bot.bot.Bot.client">
+<code class="descname">client</code><a class="headerlink" href="#disco.bot.bot.Bot.client" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>disco.client.Client</cite> &#8211; The client instance for this bot.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.Bot.config">
+<code class="descname">config</code><a class="headerlink" href="#disco.bot.bot.Bot.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>BotConfig</cite> &#8211; The bot configuration instance for this bot.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.Bot.plugins">
+<code class="descname">plugins</code><a class="headerlink" href="#disco.bot.bot.Bot.plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(str, <a class="reference internal" href="#disco.bot.plugin.Plugin" title="disco.bot.plugin.Plugin"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.plugin.Plugin</span></code></a>) &#8211; Any plugins this bot has loaded</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.add_plugin">
+<code class="descname">add_plugin</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.add_plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.add_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds and loads a plugin, based on its class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cls</strong> (subclass of <a class="reference internal" href="#disco.bot.plugin.Plugin" title="disco.bot.plugin.Plugin"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.plugin.Plugin</span></code></a>) &#8211; Plugin class to initialize and load.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.Bot.commands">
+<code class="descname">commands</code><a class="headerlink" href="#disco.bot.bot.Bot.commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator of all commands this bots plugins have defined</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.compute_command_matches_re">
+<code class="descname">compute_command_matches_re</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.compute_command_matches_re"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.compute_command_matches_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a single regex which matches all possible command combinations.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.bot.Bot.from_cli">
+<em class="property">classmethod </em><code class="descname">from_cli</code><span class="sig-paren">(</span><em>*plugins</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.from_cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.from_cli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new instance of the bot using the utilities inside of the
+<a class="reference internal" href="#module-disco.cli" title="disco.cli"><code class="xref py py-mod docutils literal"><span class="pre">disco.cli</span></code></a> module. Allows passing in a set of uninitialized
+plugin classes to load.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>plugins</strong> (Optional[list(<a class="reference internal" href="#disco.bot.plugin.Plugin" title="disco.bot.plugin.Plugin"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.plugin.Plugin</span></code></a>)]) &#8211; Any plugins to load after creating the new bot instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.get_commands_for_message">
+<code class="descname">get_commands_for_message</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.get_commands_for_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.get_commands_for_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator of all commands that a given message object triggers, based on
+the bots plugins and configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> (<a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a>) &#8211; The message object to parse and find matching commands for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body">tuple(<a class="reference internal" href="#disco.bot.command.Command" title="disco.bot.command.Command"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.command.Command</span></code></a>, <cite>re.MatchObject</cite>) &#8211; All commands the message triggers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.handle_message">
+<code class="descname">handle_message</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.handle_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.handle_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to handle a newly created or edited message in the context of
+command parsing/triggering. Calls all relevant commands the message triggers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> (<a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a>) &#8211; The newly created or updated message object to parse/handle.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">whether any commands where successfully triggered by the message</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.rmv_plugin">
+<code class="descname">rmv_plugin</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.rmv_plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.rmv_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unloads and removes a plugin based on its class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cls</strong> (subclass of <a class="reference internal" href="#disco.bot.plugin.Plugin" title="disco.bot.plugin.Plugin"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.plugin.Plugin</span></code></a>) &#8211; Plugin class to unload and remove.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.bot.Bot.run_forever">
+<code class="descname">run_forever</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/bot.html#Bot.run_forever"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.Bot.run_forever" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs this bots core loop forever</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.bot.bot.BotConfig">
+<em class="property">class </em><code class="descclassname">disco.bot.bot.</code><code class="descname">BotConfig</code><a class="reference internal" href="_modules/disco/bot/bot.html#BotConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.bot.BotConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which is used to configure and define the runtime configuration for
+a bot.</p>
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.token">
+<code class="descname">token</code><a class="headerlink" href="#disco.bot.bot.BotConfig.token" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The authentication token for this bot. This is passed on to the
+<a class="reference internal" href="#disco.client.Client" title="disco.client.Client"><code class="xref py py-class docutils literal"><span class="pre">disco.client.Client</span></code></a> without any validation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.commands_enabled">
+<code class="descname">commands_enabled</code><a class="headerlink" href="#disco.bot.bot.BotConfig.commands_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this bot instance should utilize command parsing. Generally this
+should be true, unless your bot is only handling events and has no user
+interaction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.commands_require_mention">
+<code class="descname">commands_require_mention</code><a class="headerlink" href="#disco.bot.bot.BotConfig.commands_require_mention" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether messages must mention the bot to be considered for command parsing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.commands_mention_rules">
+<code class="descname">commands_mention_rules</code><a class="headerlink" href="#disco.bot.bot.BotConfig.commands_mention_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict(str, bool)</em> &#8211; A dictionary describing what mention types can be considered a mention
+of the bot when using <a class="reference internal" href="#disco.bot.bot.BotConfig.commands_require_mention" title="disco.bot.bot.BotConfig.commands_require_mention"><code class="xref py py-attr docutils literal"><span class="pre">commands_require_mention</span></code></a>. This dictionary
+can contain the following keys: <cite>here</cite>, <cite>everyone</cite>, <cite>role</cite>, <cite>user</cite>. When
+a keys value is set to true, the mention type will be considered for
+command parsing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.commands_prefix">
+<code class="descname">commands_prefix</code><a class="headerlink" href="#disco.bot.bot.BotConfig.commands_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; A string prefix that is required for a message to be considered for
+command parsing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.commands_allow_edit">
+<code class="descname">commands_allow_edit</code><a class="headerlink" href="#disco.bot.bot.BotConfig.commands_allow_edit" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; If true, the bot will reparse an edited message if it was the last sent
+message in a channel, and did not previously trigger a command. This is
+helpful for allowing edits to typod commands.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.bot.BotConfig.plugin_config_provider">
+<code class="descname">plugin_config_provider</code><a class="headerlink" href="#disco.bot.bot.BotConfig.plugin_config_provider" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[function]</em> &#8211; If set, this function will be called before loading a plugin, with the
+plugins name. Its expected to return a type of configuration object the
+plugin understands.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-disco.bot.plugin">
+<span id="plugins"></span><h3>Plugins<a class="headerlink" href="#module-disco.bot.plugin" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.bot.plugin.Plugin">
+<em class="property">class </em><code class="descclassname">disco.bot.plugin.</code><code class="descname">Plugin</code><span class="sig-paren">(</span><em>bot</em>, <em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>A plugin is a set of listeners/commands which can be loaded/unloaded by a bot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bot</strong> (<code class="xref py py-class docutils literal"><span class="pre">disco.bot.Bot</span></code>) &#8211; The bot this plugin is a member of.</li>
+<li><strong>config</strong> (<em>any</em>) &#8211; The configuration data for this plugin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="disco.bot.plugin.Plugin.client">
+<code class="descname">client</code><a class="headerlink" href="#disco.bot.plugin.Plugin.client" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.client.Client" title="disco.client.Client"><code class="xref py py-class docutils literal"><span class="pre">disco.client.Client</span></code></a> &#8211; An alias to the client the bot is running with.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.plugin.Plugin.state">
+<code class="descname">state</code><a class="headerlink" href="#disco.bot.plugin.Plugin.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.state.State" title="disco.state.State"><code class="xref py py-class docutils literal"><span class="pre">disco.state.State</span></code></a> &#8211; An alias to the state object for the client.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.plugin.Plugin.listeners">
+<code class="descname">listeners</code><a class="headerlink" href="#disco.bot.plugin.Plugin.listeners" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> &#8211; List of all bound listeners this plugin owns.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.plugin.Plugin.commands">
+<code class="descname">commands</code><a class="headerlink" href="#disco.bot.plugin.Plugin.commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>list(<a class="reference internal" href="#disco.bot.command.Command" title="disco.bot.command.Command"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.command.Command</span></code></a>) &#8211; List of all commands this plugin owns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.destroy">
+<code class="descname">destroy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.destroy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroys the plugin (removing all listeners)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a CommandEvent this plugin owns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.load">
+<code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the plugin is loaded</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.register_command">
+<code class="descname">register_command</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.register_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.register_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>function</em>) &#8211; The function to be registered.</li>
+<li><strong>args</strong> &#8211; Arguments to pass onto the <a class="reference internal" href="#disco.bot.command.Command" title="disco.bot.command.Command"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.command.Command</span></code></a> object.</li>
+<li><strong>kwargs</strong> &#8211; Keyword arguments to pass onto the <a class="reference internal" href="#disco.bot.command.Command" title="disco.bot.command.Command"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.command.Command</span></code></a>
+object.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.register_listener">
+<code class="descname">register_listener</code><span class="sig-paren">(</span><em>func</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.register_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.register_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a listener</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>function</em>) &#8211; The function to be registered.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of event to listen for.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.register_trigger">
+<code class="descname">register_trigger</code><span class="sig-paren">(</span><em>typ</em>, <em>when</em>, <em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.register_trigger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.register_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a trigger</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.plugin.Plugin.unload">
+<code class="descname">unload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#Plugin.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.Plugin.unload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the plugin is unloaded</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.bot.plugin.PluginDeco">
+<em class="property">class </em><code class="descclassname">disco.bot.plugin.</code><code class="descname">PluginDeco</code><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco" title="Permalink to this definition">¶</a></dt>
+<dd><p>A utility mixin which provides various function decorators that a plugin
+author can use to create bound event/command handlers.</p>
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.command">
+<em class="property">classmethod </em><code class="descname">command</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new command attached to the function</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.listen">
+<em class="property">classmethod </em><code class="descname">listen</code><span class="sig-paren">(</span><em>event_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.listen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binds the function to listen for a given event name</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.post_command">
+<em class="property">classmethod </em><code class="descname">post_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.post_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.post_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function after a command is triggered</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.post_listener">
+<em class="property">classmethod </em><code class="descname">post_listener</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.post_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.post_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function after a listener is triggered</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.pre_command">
+<em class="property">classmethod </em><code class="descname">pre_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.pre_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.pre_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function before a command is triggered</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.plugin.PluginDeco.pre_listener">
+<em class="property">classmethod </em><code class="descname">pre_listener</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/plugin.html#PluginDeco.pre_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.plugin.PluginDeco.pre_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function before a listener is triggered</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.bot.command">
+<span id="commands"></span><h3>Commands<a class="headerlink" href="#module-disco.bot.command" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.bot.command.Command">
+<em class="property">class </em><code class="descclassname">disco.bot.command.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>plugin</em>, <em>func</em>, <em>trigger</em>, <em>args=None</em>, <em>aliases=None</em>, <em>group=None</em>, <em>is_regex=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/command.html#Command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.command.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which defines and handles the triggering of a function based on
+user input (aka a command).</p>
+<dl class="attribute">
+<dt id="disco.bot.command.Command.plugin">
+<code class="descname">plugin</code><a class="headerlink" href="#disco.bot.command.Command.plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.bot.plugin.Plugin" title="disco.bot.plugin.Plugin"><code class="xref py py-class docutils literal"><span class="pre">disco.bot.plugin.Plugin</span></code></a> &#8211; The plugin this command is a member of.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.func">
+<code class="descname">func</code><a class="headerlink" href="#disco.bot.command.Command.func" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>function</em> &#8211; The function which is called when this command is triggered.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.trigger">
+<code class="descname">trigger</code><a class="headerlink" href="#disco.bot.command.Command.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The primary trigger (aka name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.args">
+<code class="descname">args</code><a class="headerlink" href="#disco.bot.command.Command.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[str]</em> &#8211; The argument format specification.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.aliases">
+<code class="descname">aliases</code><a class="headerlink" href="#disco.bot.command.Command.aliases" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[list(str)]</em> &#8211; List of trigger aliases.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.group">
+<code class="descname">group</code><a class="headerlink" href="#disco.bot.command.Command.group" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[str]</em> &#8211; The group this command is a member of.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.is_regex">
+<code class="descname">is_regex</code><a class="headerlink" href="#disco.bot.command.Command.is_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Optional[bool]</em> &#8211; Whether the triggers for this command should be treated as raw regex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.command.Command.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/command.html#Command.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.command.Command.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the execution of this command given a <a class="reference internal" href="#disco.bot.command.CommandEvent" title="disco.bot.command.CommandEvent"><code class="xref py py-class docutils literal"><span class="pre">CommandEvent</span></code></a>
+object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this command was sucessful</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.Command.regex">
+<code class="descname">regex</code><a class="headerlink" href="#disco.bot.command.Command.regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regex string that defines/triggers this command</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="disco.bot.command.CommandError">
+<em class="property">exception </em><code class="descclassname">disco.bot.command.</code><code class="descname">CommandError</code><a class="reference internal" href="_modules/disco/bot/command.html#CommandError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.command.CommandError" title="Permalink to this definition">¶</a></dt>
+<dd><p>An exception which is thrown when the arguments for a command are invalid,
+or don&#8217;t match the commands specifications.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.bot.command.CommandEvent">
+<em class="property">class </em><code class="descclassname">disco.bot.command.</code><code class="descname">CommandEvent</code><span class="sig-paren">(</span><em>command</em>, <em>msg</em>, <em>match</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/command.html#CommandEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.command.CommandEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>An event which is created when a command is triggered. Contains information
+about the message, command, and parsed arguments (along with shortcuts to
+message information).</p>
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.command">
+<code class="descname">command</code><a class="headerlink" href="#disco.bot.command.CommandEvent.command" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.bot.command.Command" title="disco.bot.command.Command"><code class="xref py py-class docutils literal"><span class="pre">Command</span></code></a> &#8211; The command this event was created for (aka the triggered command).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.msg">
+<code class="descname">msg</code><a class="headerlink" href="#disco.bot.command.CommandEvent.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#disco.types.message.Message" title="disco.types.message.Message"><code class="xref py py-class docutils literal"><span class="pre">disco.types.message.Message</span></code></a> &#8211; The message object which triggered this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.match">
+<code class="descname">match</code><a class="headerlink" href="#disco.bot.command.CommandEvent.match" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">re.MatchObject</span></code> &#8211; The regex match object for the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.bot.command.CommandEvent.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The command name (or alias) which was triggered by the command</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.args">
+<code class="descname">args</code><a class="headerlink" href="#disco.bot.command.CommandEvent.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(str)</em> &#8211; Arguments passed to the command</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.author">
+<code class="descname">author</code><a class="headerlink" href="#disco.bot.command.CommandEvent.author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Author of the message</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.channel">
+<code class="descname">channel</code><a class="headerlink" href="#disco.bot.command.CommandEvent.channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel the message was created in</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.command.CommandEvent.guild">
+<code class="descname">guild</code><a class="headerlink" href="#disco.bot.command.CommandEvent.guild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guild (if relevant) the message was created in</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-disco.bot.parser">
+<span id="command-argument-parser"></span><h3>Command Argument Parser<a class="headerlink" href="#module-disco.bot.parser" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.bot.parser.Argument">
+<em class="property">class </em><code class="descclassname">disco.bot.parser.</code><code class="descname">Argument</code><span class="sig-paren">(</span><em>raw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#Argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.Argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single argument, which is normally the member of a <a class="reference internal" href="#disco.bot.parser.ArgumentSet" title="disco.bot.parser.ArgumentSet"><code class="xref py py-class docutils literal"><span class="pre">ArgumentSet</span></code></a>.</p>
+<dl class="attribute">
+<dt id="disco.bot.parser.Argument.name">
+<code class="descname">name</code><a class="headerlink" href="#disco.bot.parser.Argument.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of this argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.Argument.count">
+<code class="descname">count</code><a class="headerlink" href="#disco.bot.parser.Argument.count" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The number of raw arguments that compose this argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.Argument.required">
+<code class="descname">required</code><a class="headerlink" href="#disco.bot.parser.Argument.required" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Whether this is a required argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.Argument.types">
+<code class="descname">types</code><a class="headerlink" href="#disco.bot.parser.Argument.types" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list(type)</em> &#8211; Types this argument supports.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.parser.Argument.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>raw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#Argument.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.Argument.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to parse arguments from their raw form</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.Argument.true_count">
+<code class="descname">true_count</code><a class="headerlink" href="#disco.bot.parser.Argument.true_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The true number of raw arguments this argument takes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="disco.bot.parser.ArgumentError">
+<em class="property">exception </em><code class="descclassname">disco.bot.parser.</code><code class="descname">ArgumentError</code><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentError" title="Permalink to this definition">¶</a></dt>
+<dd><p>An error thrown when passed in arguments cannot be conformed/casted to the
+argument specification.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.bot.parser.ArgumentSet">
+<em class="property">class </em><code class="descclassname">disco.bot.parser.</code><code class="descname">ArgumentSet</code><span class="sig-paren">(</span><em>args=None</em>, <em>custom_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>A set of <a class="reference internal" href="#disco.bot.parser.Argument" title="disco.bot.parser.Argument"><code class="xref py py-class docutils literal"><span class="pre">Argument</span></code></a> instances which forms a larger argument specification</p>
+<dl class="attribute">
+<dt id="disco.bot.parser.ArgumentSet.args">
+<code class="descname">args</code><a class="headerlink" href="#disco.bot.parser.ArgumentSet.args" title="Permalink to this definition">¶</a></dt>
+<dd><p>list(<a class="reference internal" href="#disco.bot.parser.Argument" title="disco.bot.parser.Argument"><code class="xref py py-class docutils literal"><span class="pre">Argument</span></code></a>) &#8211; All arguments that are a member of this set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.ArgumentSet.types">
+<code class="descname">types</code><a class="headerlink" href="#disco.bot.parser.ArgumentSet.types" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict(str, type)</em> &#8211; All types supported by this ArgumentSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.parser.ArgumentSet.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentSet.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentSet.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new <a class="reference internal" href="#disco.bot.parser.Argument" title="disco.bot.parser.Argument"><code class="xref py py-class docutils literal"><span class="pre">Argument</span></code></a> to this argument specification/set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.parser.ArgumentSet.convert">
+<code class="descname">convert</code><span class="sig-paren">(</span><em>types</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentSet.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentSet.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to convert a value to one or more types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>types</strong> (<em>list(type)</em>) &#8211; List of types to attempt conversion with.</li>
+<li><strong>value</strong> (<em>str</em>) &#8211; The string value to attempt conversion on.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="disco.bot.parser.ArgumentSet.from_string">
+<em class="property">classmethod </em><code class="descname">from_string</code><span class="sig-paren">(</span><em>line</em>, <em>custom_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentSet.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentSet.from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <a class="reference internal" href="#disco.bot.parser.ArgumentSet" title="disco.bot.parser.ArgumentSet"><code class="xref py py-class docutils literal"><span class="pre">ArgumentSet</span></code></a> from a given argument string specification</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.ArgumentSet.length">
+<code class="descname">length</code><a class="headerlink" href="#disco.bot.parser.ArgumentSet.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of arguments in this set/specification</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.bot.parser.ArgumentSet.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>rawargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/bot/parser.html#ArgumentSet.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.bot.parser.ArgumentSet.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a string of raw arguments into this argument specification.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.ArgumentSet.required_length">
+<code class="descname">required_length</code><a class="headerlink" href="#disco.bot.parser.ArgumentSet.required_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of required arguments to compile this set/specificaiton</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="gateway-api">
+<h2>Gateway API<a class="headerlink" href="#gateway-api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gatewayclient">
+<h3>GatewayClient<a class="headerlink" href="#gatewayclient" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.gateway.client.GatewayClient">
+<em class="property">class </em><code class="descclassname">disco.gateway.client.</code><code class="descname">GatewayClient</code><span class="sig-paren">(</span><em>client</em>, <em>encoder=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/gateway/client.html#GatewayClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.gateway.client.GatewayClient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gateway-events">
+<h3>Gateway Events<a class="headerlink" href="#gateway-events" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="rest-api">
+<h2>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="apiclient">
+<h3>APIClient<a class="headerlink" href="#apiclient" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.api.client.APIClient">
+<em class="property">class </em><code class="descclassname">disco.api.client.</code><code class="descname">APIClient</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstraction over the <a class="reference internal" href="#disco.api.http.HTTPClient" title="disco.api.http.HTTPClient"><code class="xref py py-class docutils literal"><span class="pre">disco.api.http.HTTPClient</span></code></a> that composes requests, and fits
+the models with the returned data.</p>
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_delete">
+<code class="descname">channels_delete</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_get">
+<code class="descname">channels_get</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_invites_create">
+<code class="descname">channels_invites_create</code><span class="sig-paren">(</span><em>channel</em>, <em>max_age=86400</em>, <em>max_uses=0</em>, <em>temporary=False</em>, <em>unique=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_invites_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_invites_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_invites_list">
+<code class="descname">channels_invites_list</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_invites_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_invites_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_create">
+<code class="descname">channels_messages_create</code><span class="sig-paren">(</span><em>channel</em>, <em>content</em>, <em>nonce=None</em>, <em>tts=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_delete">
+<code class="descname">channels_messages_delete</code><span class="sig-paren">(</span><em>channel</em>, <em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_delete_bulk">
+<code class="descname">channels_messages_delete_bulk</code><span class="sig-paren">(</span><em>channel</em>, <em>messages</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_delete_bulk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_delete_bulk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_get">
+<code class="descname">channels_messages_get</code><span class="sig-paren">(</span><em>channel</em>, <em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_list">
+<code class="descname">channels_messages_list</code><span class="sig-paren">(</span><em>channel</em>, <em>around=None</em>, <em>before=None</em>, <em>after=None</em>, <em>limit=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_messages_modify">
+<code class="descname">channels_messages_modify</code><span class="sig-paren">(</span><em>channel</em>, <em>message</em>, <em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_messages_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_messages_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_modify">
+<code class="descname">channels_modify</code><span class="sig-paren">(</span><em>channel</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_permissions_delete">
+<code class="descname">channels_permissions_delete</code><span class="sig-paren">(</span><em>channel</em>, <em>permission</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_permissions_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_permissions_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_permissions_modify">
+<code class="descname">channels_permissions_modify</code><span class="sig-paren">(</span><em>channel</em>, <em>permission</em>, <em>allow</em>, <em>deny</em>, <em>typ</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_permissions_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_permissions_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_pins_create">
+<code class="descname">channels_pins_create</code><span class="sig-paren">(</span><em>channel</em>, <em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_pins_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_pins_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_pins_delete">
+<code class="descname">channels_pins_delete</code><span class="sig-paren">(</span><em>channel</em>, <em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_pins_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_pins_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.channels_pins_list">
+<code class="descname">channels_pins_list</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.channels_pins_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.channels_pins_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.gateway">
+<code class="descname">gateway</code><span class="sig-paren">(</span><em>version</em>, <em>encoding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.gateway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.gateway" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_bans_create">
+<code class="descname">guilds_bans_create</code><span class="sig-paren">(</span><em>guild</em>, <em>user</em>, <em>delete_message_days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_bans_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_bans_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_bans_delete">
+<code class="descname">guilds_bans_delete</code><span class="sig-paren">(</span><em>guild</em>, <em>user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_bans_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_bans_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_bans_list">
+<code class="descname">guilds_bans_list</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_bans_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_bans_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_channels_create">
+<code class="descname">guilds_channels_create</code><span class="sig-paren">(</span><em>guild</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_channels_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_channels_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_channels_list">
+<code class="descname">guilds_channels_list</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_channels_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_channels_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_channels_modify">
+<code class="descname">guilds_channels_modify</code><span class="sig-paren">(</span><em>guild</em>, <em>channel</em>, <em>position</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_channels_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_channels_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_delete">
+<code class="descname">guilds_delete</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_get">
+<code class="descname">guilds_get</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_members_get">
+<code class="descname">guilds_members_get</code><span class="sig-paren">(</span><em>guild</em>, <em>member</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_members_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_members_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_members_kick">
+<code class="descname">guilds_members_kick</code><span class="sig-paren">(</span><em>guild</em>, <em>member</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_members_kick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_members_kick" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_members_list">
+<code class="descname">guilds_members_list</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_members_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_members_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_members_modify">
+<code class="descname">guilds_members_modify</code><span class="sig-paren">(</span><em>guild</em>, <em>member</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_members_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_members_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_modify">
+<code class="descname">guilds_modify</code><span class="sig-paren">(</span><em>guild</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_roles_create">
+<code class="descname">guilds_roles_create</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_roles_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_roles_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_roles_delete">
+<code class="descname">guilds_roles_delete</code><span class="sig-paren">(</span><em>guild</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_roles_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_roles_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_roles_list">
+<code class="descname">guilds_roles_list</code><span class="sig-paren">(</span><em>guild</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_roles_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_roles_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_roles_modify">
+<code class="descname">guilds_roles_modify</code><span class="sig-paren">(</span><em>guild</em>, <em>role</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_roles_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_roles_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="disco.api.client.APIClient.guilds_roles_modify_batch">
+<code class="descname">guilds_roles_modify_batch</code><span class="sig-paren">(</span><em>guild</em>, <em>roles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/client.html#APIClient.guilds_roles_modify_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.client.APIClient.guilds_roles_modify_batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="http-utilities">
+<h3>HTTP Utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.api.http.APIException">
+<em class="property">class </em><code class="descclassname">disco.api.http.</code><code class="descname">APIException</code><span class="sig-paren">(</span><em>msg</em>, <em>status_code=0</em>, <em>content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/http.html#APIException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.http.APIException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an HTTP-client level error occurs. Usually this will
+be a non-success status-code, or a transient network issue.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.api.http.HTTPClient">
+<em class="property">class </em><code class="descclassname">disco.api.http.</code><code class="descname">HTTPClient</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/http.html#HTTPClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.http.HTTPClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple HTTP client which wraps the requests library, adding support for
+Discords rate-limit headers, authorization, and request/response validation.</p>
+<dl class="method">
+<dt id="disco.api.http.HTTPClient.call">
+<code class="descname">call</code><span class="sig-paren">(</span><em>route</em>, <em>args=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/http.html#HTTPClient.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.http.HTTPClient.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a request to the given route (as specified in
+<code class="xref py py-class docutils literal"><span class="pre">disco.api.http.Routes</span></code>) with a set of URL arguments, and keyword
+arguments passed to requests.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>route</strong> (tuple(<code class="xref py py-class docutils literal"><span class="pre">HTTPMethod</span></code>, str)) &#8211; The method.URL combination that when compiled with URL arguments
+creates a requestable route which the HTTPClient will make the
+request too.</li>
+<li><strong>args</strong> (<em>dict(str, str)</em>) &#8211; A dictionary of URL arguments that will be compiled with the raw URL
+to create the requestable route. The HTTPClient uses this to track
+rate limits as well.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) &#8211; Keyword arguments that will be passed along to the requests library</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><code class="xref py py-exc docutils literal"><span class="pre">APIException</span></code> &#8211; Raised when an unrecoverable error occurs, or when we&#8217;ve exhausted
+the number of retries.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response object for the request</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">requests.Response</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="disco.api.http.HTTPClient.random_backoff">
+<em class="property">static </em><code class="descname">random_backoff</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/http.html#HTTPClient.random_backoff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.http.HTTPClient.random_backoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a random backoff (in milliseconds) to be used for any error the
+client suspects is transient. Will always return a value between 500 and
+5000 milliseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a random backoff in milliseconds</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ratelimit-utilities">
+<h3>Ratelimit Utilities<a class="headerlink" href="#ratelimit-utilities" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="disco.api.ratelimit.RouteState">
+<em class="property">class </em><code class="descclassname">disco.api.ratelimit.</code><code class="descname">RouteState</code><span class="sig-paren">(</span><em>route</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RouteState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RouteState" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which stores ratelimit state for a given method/url route
+combination (as specified in <code class="xref py py-class docutils literal"><span class="pre">disco.api.http.Routes</span></code>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>route</strong> (<em>tuple(HTTPMethod, str)</em>) &#8211; The route which this RouteState is for.</li>
+<li><strong>response</strong> (<code class="xref py py-class docutils literal"><span class="pre">requests.Response</span></code>) &#8211; The response object for the last request made to the route, should contain
+the standard rate limit headers.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="disco.bot.parser.RouteState.route">
+<code class="descname">route</code><a class="headerlink" href="#disco.bot.parser.RouteState.route" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple(HTTPMethod, str)</em> &#8211; The route which this RouteState is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.RouteState.remaining">
+<code class="descname">remaining</code><a class="headerlink" href="#disco.bot.parser.RouteState.remaining" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The number of remaining requests to the route before the rate limit will
+be hit, triggering a 429 response.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.RouteState.reset_time">
+<code class="descname">reset_time</code><a class="headerlink" href="#disco.bot.parser.RouteState.reset_time" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; A unix epoch timestamp (in seconds) after which this rate limit is reset</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.bot.parser.RouteState.event">
+<code class="descname">event</code><a class="headerlink" href="#disco.bot.parser.RouteState.event" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">gevent.event.Event</span></code> &#8211; An event that is used to block all requests while a route is in the
+cooldown stage.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.api.ratelimit.RouteState.chilled">
+<code class="descname">chilled</code><a class="headerlink" href="#disco.api.ratelimit.RouteState.chilled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this route is currently being cooldown (aka waiting until reset_time)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.api.ratelimit.RouteState.cooldown">
+<code class="descname">cooldown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RouteState.cooldown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RouteState.cooldown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the current route to be cooled-down (aka waiting until reset time)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="disco.api.ratelimit.RouteState.next_will_ratelimit">
+<code class="descname">next_will_ratelimit</code><a class="headerlink" href="#disco.api.ratelimit.RouteState.next_will_ratelimit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the next request to the route (at this moment in time) will
+trigger the rate limit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.api.ratelimit.RouteState.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RouteState.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RouteState.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates this route with a given Requests response object. Its expected
+the response has the required headers, however in the case it doesn&#8217;t
+this function has no effect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.api.ratelimit.RouteState.wait">
+<code class="descname">wait</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RouteState.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RouteState.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits until this route is no longer under a cooldown</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>Optional[int]</em>) &#8211; A timeout (in seconds) after which we will give up waiting</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">False if the timeout period expired before the cooldown was finished</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="disco.api.ratelimit.RateLimiter">
+<em class="property">class </em><code class="descclassname">disco.api.ratelimit.</code><code class="descname">RateLimiter</code><a class="reference internal" href="_modules/disco/api/ratelimit.html#RateLimiter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RateLimiter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A in-memory store of ratelimit states for all routes we&#8217;ve ever called.</p>
+<dl class="attribute">
+<dt id="disco.bot.parser.RateLimiter.states">
+<code class="descname">states</code><a class="headerlink" href="#disco.bot.parser.RateLimiter.states" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict(tuple(HTTPMethod, str), <code class="xref py py-class docutils literal"><span class="pre">RouteState</span></code>) &#8211; Contains a <code class="xref py py-class docutils literal"><span class="pre">RouteState</span></code> for each route the RateLimiter is currently
+tracking.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.api.ratelimit.RateLimiter.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>route</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RateLimiter.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RateLimiter.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a given route can be called. This function will return
+immediately if no rate-limit cooldown is being imposed for the given
+route, or will wait indefinently (unless timeout is specified) until
+the route is finished being cooled down. This function should be called
+before making a request to the specified route.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>route</strong> (<em>tuple(HTTPMethod, str)</em>) &#8211; The route that will be checked.</li>
+<li><strong>timeout</strong> (<em>Optional[int]</em>) &#8211; A timeout after which we&#8217;ll give up waiting for a routes cooldown
+to expire, and immedietly return.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">False if the timeout period expired before the route finished cooling
+down.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="disco.api.ratelimit.RateLimiter.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>route</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/disco/api/ratelimit.html#RateLimiter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#disco.api.ratelimit.RateLimiter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given routes state with the rate-limit headers inside the
+response from a previous call to the route.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>route</strong> (<em>tuple(HTTPMethod, str)</em>) &#8211; The route that will be updated.</li>
+<li><strong>response</strong> (<code class="xref py py-class docutils literal"><span class="pre">requests.Response</span></code>) &#8211; The response object for the last request to the route, whose headers
+will be used to update the routes rate limit state.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Utilities" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

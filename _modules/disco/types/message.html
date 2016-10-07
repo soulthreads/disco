@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.types.message &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.types.message</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.types.message</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">holster.enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">disco.types.base</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">snowflake</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">dictof</span><span class="p">,</span> <span class="n">listof</span><span class="p">,</span> <span class="n">enum</span>
+<span class="kn">from</span> <span class="nn">disco.util</span> <span class="k">import</span> <span class="n">to_snowflake</span>
+<span class="kn">from</span> <span class="nn">disco.util.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">disco.types.user</span> <span class="k">import</span> <span class="n">User</span>
+
+
+<span class="n">MessageType</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+    <span class="n">DEFAULT</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">RECIPIENT_ADD</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">RECIPIENT_REMOVE</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">CALL</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">CHANNEL_NAME_CHANGE</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">CHANNEL_ICON_CHANGE</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">PINS_ADD</span><span class="o">=</span><span class="mi">6</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MessageEmbed"><a class="viewcode-back" href="../../../api.html#disco.types.message.MessageEmbed">[docs]</a><span class="k">class</span> <span class="nc">MessageEmbed</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Message embed object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title : str</span>
+<span class="sd">        Title of the embed.</span>
+<span class="sd">    type : str</span>
+<span class="sd">        Type of the embed.</span>
+<span class="sd">    description : str</span>
+<span class="sd">        Description of the embed.</span>
+<span class="sd">    url : str</span>
+<span class="sd">        URL of the embed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="MessageAttachment"><a class="viewcode-back" href="../../../api.html#disco.types.message.MessageAttachment">[docs]</a><span class="k">class</span> <span class="nc">MessageAttachment</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Message attachment object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The id of this attachment.</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The filename of this attachment.</span>
+<span class="sd">    url : str</span>
+<span class="sd">        The URL of this attachment.</span>
+<span class="sd">    proxy_url : str</span>
+<span class="sd">        The URL to proxy through when downloading the attachment.</span>
+<span class="sd">    size : int</span>
+<span class="sd">        Size of the attachment.</span>
+<span class="sd">    height : int</span>
+<span class="sd">        Height of the attachment.</span>
+<span class="sd">    width : int</span>
+<span class="sd">        Width of the attachment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">proxy_url</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="Message"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message">[docs]</a><span class="k">class</span> <span class="nc">Message</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a Message created within a Channel on Discord.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The ID of this message.</span>
+<span class="sd">    channel_id : snowflake</span>
+<span class="sd">        The channel ID this message was sent in.</span>
+<span class="sd">    type : ``MessageType``</span>
+<span class="sd">        Type of the message.</span>
+<span class="sd">    author : :class:`disco.types.user.User`</span>
+<span class="sd">        The author of this message.</span>
+<span class="sd">    content : str</span>
+<span class="sd">        The unicode contents of this message.</span>
+<span class="sd">    nonce : str</span>
+<span class="sd">        The nonce of this message.</span>
+<span class="sd">    timestamp : datetime</span>
+<span class="sd">        When this message was created.</span>
+<span class="sd">    edited_timestamp : Optional[datetime]</span>
+<span class="sd">        When this message was last edited.</span>
+<span class="sd">    tts : bool</span>
+<span class="sd">        Whether this is a TTS (text-to-speech) message.</span>
+<span class="sd">    mention_everyone : bool</span>
+<span class="sd">        Whether this message has an @everyone which mentions everyone.</span>
+<span class="sd">    pinned : bool</span>
+<span class="sd">        Whether this message is pinned in the channel.</span>
+<span class="sd">    mentions : dict(snowflake, :class:`disco.types.user.User`)</span>
+<span class="sd">        All users mentioned within this message.</span>
+<span class="sd">    mention_roles : list(snowflake)</span>
+<span class="sd">        All roles mentioned within this message.</span>
+<span class="sd">    embeds : list(:class:`MessageEmbed`)</span>
+<span class="sd">        All embeds for this message.</span>
+<span class="sd">    attachments : list(:class:`MessageAttachment`)</span>
+<span class="sd">        All attachments for this message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">enum</span><span class="p">(</span><span class="n">MessageType</span><span class="p">)</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">User</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">nonce</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span>
+    <span class="n">edited_timestamp</span> <span class="o">=</span> <span class="n">datetime</span>
+    <span class="n">tts</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">mention_everyone</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">pinned</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">mentions</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="n">mention_roles</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="n">snowflake</span><span class="p">)</span>
+    <span class="n">embeds</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="n">MessageEmbed</span><span class="p">)</span>
+    <span class="n">attachments</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">MessageAttachment</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;Message </span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">guild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.guild.Guild`</span>
+<span class="sd">            The guild (if applicable) this message was created in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">guild</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">channel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.channel.Channel`</span>
+<span class="sd">            The channel this message was created in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Message.reply"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message.reply">[docs]</a>    <span class="k">def</span> <span class="nf">reply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reply to this message (proxys arguments to</span>
+<span class="sd">        :func:`disco.types.channel.Channel.send_message`)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Message`</span>
+<span class="sd">            The created message object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Message.edit"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message.edit">[docs]</a>    <span class="k">def</span> <span class="nf">edit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edit this message</span>
+
+<span class="sd">        Args</span>
+<span class="sd">        ----</span>
+<span class="sd">        content : str</span>
+<span class="sd">            The new edited contents of the message.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Message`</span>
+<span class="sd">            The edited message object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_messages_modify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Message.delete"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete this message.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Message`</span>
+<span class="sd">            The deleted message object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">channels_messages_delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Message.is_mentioned"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message.is_mentioned">[docs]</a>    <span class="k">def</span> <span class="nf">is_mentioned</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Whether the give entity was mentioned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">to_snowflake</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mentions</span> <span class="ow">or</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mention_roles</span></div>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">without_mentions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            the message contents with all valid mentions removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_mentions</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Message.replace_mentions"><a class="viewcode-back" href="../../../api.html#disco.types.message.Message.replace_mentions">[docs]</a>    <span class="k">def</span> <span class="nf">replace_mentions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_replace</span><span class="p">,</span> <span class="n">role_replace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replaces user and role mentions with the result of a given lambda/function.</span>
+
+<span class="sd">        Args</span>
+<span class="sd">        ----</span>
+<span class="sd">        user_replace : function</span>
+<span class="sd">            A function taking a single argument, the user object mentioned, and</span>
+<span class="sd">            returning a valid string.</span>
+<span class="sd">        role_replace : function</span>
+<span class="sd">            A function taking a single argument, the role ID mentioned, and</span>
+<span class="sd">            returning a valid string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The message contents with all valid mentions replaced.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mentions</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mention_roles</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mention_roles</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">role_replace</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">user_replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mentions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&lt;@!?([0-9]+)&gt;&#39;</span><span class="p">,</span> <span class="n">replace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.state &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.state</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.state</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">inflection</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">deque</span><span class="p">,</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">WeakValueDictionary</span>
+
+<span class="kn">from</span> <span class="nn">disco.gateway.packets</span> <span class="k">import</span> <span class="n">OPCode</span>
+
+
+<div class="viewcode-block" id="StackMessage"><a class="viewcode-back" href="../../api.html#disco.state.StackMessage">[docs]</a><span class="k">class</span> <span class="nc">StackMessage</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;StackMessage&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_id&#39;</span><span class="p">,</span> <span class="s1">&#39;author_id&#39;</span><span class="p">])):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A message stored on a stack inside of the state object, used for tracking</span>
+<span class="sd">    previously sent messages in channels.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ---------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        the id of the message</span>
+<span class="sd">    channel_id : snowflake</span>
+<span class="sd">        the id of the channel this message was sent in</span>
+<span class="sd">    author_id : snowflake</span>
+<span class="sd">        the id of the author of this message</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="StateConfig"><a class="viewcode-back" href="../../api.html#disco.state.StateConfig">[docs]</a><span class="k">class</span> <span class="nc">StateConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A configuration object for determining how the State tracking behaves.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    track_messages : bool</span>
+<span class="sd">        Whether the state store should keep a buffer of previously sent messages.</span>
+<span class="sd">        Message tracking allows for multiple higher-level shortcuts and can be</span>
+<span class="sd">        highly useful when developing bots that need to delete their own messages.</span>
+
+<span class="sd">        Message tracking is implemented using a deque and a namedtuple, meaning</span>
+<span class="sd">        it should generally not have a high impact on memory, however users who</span>
+<span class="sd">        find they do not need and may be experiencing memory pressure can disable</span>
+<span class="sd">        this feature entirely using this attribute.</span>
+<span class="sd">    track_messages_size : int</span>
+<span class="sd">        The size of the deque for each channel. Using this you can calculate the</span>
+<span class="sd">        total number of possible :class:`StackMessage` objects kept in memory,</span>
+<span class="sd">        using: `total_mesages_size * total_channels`. This can be tweaked based</span>
+<span class="sd">        on usage to help prevent memory pressure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">track_messages</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">track_messages_size</span> <span class="o">=</span> <span class="mi">100</span></div>
+
+
+<div class="viewcode-block" id="State"><a class="viewcode-back" href="../../api.html#disco.state.State">[docs]</a><span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The State class is used to track global state based on events emitted from</span>
+<span class="sd">    the :class:`GatewayClient`. State tracking is a core component of the Disco</span>
+<span class="sd">    client, providing the mechanism for most of the higher-level utility functions.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    EVENTS : list(str)</span>
+<span class="sd">        A list of all events the State object binds too.</span>
+<span class="sd">    client : :class:`disco.client.Client`</span>
+<span class="sd">        The Client instance this state is attached too</span>
+<span class="sd">    config : :class:`StateConfig`</span>
+<span class="sd">        The configuration for this state instance</span>
+<span class="sd">    me : :class:`disco.types.user.User`</span>
+<span class="sd">        The currently logged in user</span>
+<span class="sd">    dms : dict(snowflake, :class:`disco.types.channel.Channel`)</span>
+<span class="sd">        Mapping of all known DM Channels</span>
+<span class="sd">    guilds : dict(snowflake, :class:`disco.types.guild.Guild`)</span>
+<span class="sd">        Mapping of all known/loaded Guilds</span>
+<span class="sd">    channels : dict(snowflake, :class:`disco.types.channel.Channel`)</span>
+<span class="sd">        Weak mapping of all known/loaded Channels</span>
+<span class="sd">    users : dict(snowflake, :class:`disco.types.user.User`)</span>
+<span class="sd">        Weak mapping of all known/loaded Users</span>
+<span class="sd">    voice_states : dict(str, :class:`disco.types.voice.VoiceState`)</span>
+<span class="sd">        Weak mapping of all known/active Voice States</span>
+<span class="sd">    messages : Optional[dict(snowflake, :class:`deque`)]</span>
+<span class="sd">        Mapping of channel ids to deques containing :class:`StackMessage` objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">EVENTS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;Ready&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildCreate&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildUpdate&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildDelete&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildMemberAdd&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildMemberRemove&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GuildMemberUpdate&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildMembersChunk&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildRoleCreate&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildRoleUpdate&#39;</span><span class="p">,</span> <span class="s1">&#39;GuildRoleDelete&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ChannelCreate&#39;</span><span class="p">,</span> <span class="s1">&#39;ChannelUpdate&#39;</span><span class="p">,</span> <span class="s1">&#39;ChannelDelete&#39;</span><span class="p">,</span> <span class="s1">&#39;VoiceStateUpdate&#39;</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">StateConfig</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">me</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="n">WeakValueDictionary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users</span> <span class="o">=</span> <span class="n">WeakValueDictionary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voice_states</span> <span class="o">=</span> <span class="n">WeakValueDictionary</span><span class="p">()</span>
+
+        <span class="c1"># If message tracking is enabled, listen to those events</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">track_messages</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">track_messages_size</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">EVENTS</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;MessageCreate&#39;</span><span class="p">,</span> <span class="s1">&#39;MessageDelete&#39;</span><span class="p">]</span>
+
+        <span class="c1"># The bound listener objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
+
+<div class="viewcode-block" id="State.unbind"><a class="viewcode-back" href="../../api.html#disco.state.State.unbind">[docs]</a>    <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unbinds all bound event listeners for this state object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">unbind</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="State.bind"><a class="viewcode-back" href="../../api.html#disco.state.State.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Binds all events for this state object, storing the listeners for later</span>
+<span class="sd">        unbinding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">),</span> <span class="s1">&#39;Binding while already bound is dangerous&#39;</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">EVENTS</span><span class="p">:</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="s1">&#39;on_&#39;</span> <span class="o">+</span> <span class="n">inflection</span><span class="o">.</span><span class="n">underscore</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">)))</span></div>
+
+    <span class="k">def</span> <span class="nf">on_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">me</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="k">def</span> <span class="nf">on_message_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">channel_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">StackMessage</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">author</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">on_message_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="n">message</span><span class="p">,</span> <span class="n">cid</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">channel_id</span>
+        <span class="k">if</span> <span class="n">cid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">sm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">cid</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">message</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sm</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">sm</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">channel_id</span> <span class="o">=</span> <span class="n">cid</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">author_id</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">author</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="k">def</span> <span class="nf">on_message_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">channel_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">sm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel_id</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sm</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel_id</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">channel</span><span class="o">.</span><span class="n">guild_id</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span>
+            <span class="n">channel</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span>
+
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">user</span>
+
+        <span class="c1"># Request full member list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">OPCode</span><span class="o">.</span><span class="n">REQUEST_GUILD_MEMBERS</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;guild_id&#39;</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">guild</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="c1"># Just delete the guild, channel references will fall</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">on_channel_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">is_guild</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">is_dm</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dms</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span>
+
+    <span class="k">def</span> <span class="nf">on_channel_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_channel_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">is_guild</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">is_dm</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pms</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">on_voice_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># Happy path: we have the voice state and want to update/delete it</span>
+        <span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">session_id</span> <span class="ow">in</span> <span class="n">guild</span><span class="o">.</span><span class="n">voice_states</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">channel_id</span><span class="p">:</span>
+                <span class="n">guild</span><span class="o">.</span><span class="n">voice_states</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">session_id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">guild</span><span class="o">.</span><span class="n">voice_states</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">session_id</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">channel_id</span><span class="p">:</span>
+            <span class="n">guild</span><span class="o">.</span><span class="n">voice_states</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">session_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_member_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">user</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">member</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_member_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">roles</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">roles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_member_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_members_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">members</span><span class="p">:</span>
+            <span class="n">member</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">guild</span>
+            <span class="n">member</span><span class="o">.</span><span class="n">guild_id</span> <span class="o">=</span> <span class="n">guild</span><span class="o">.</span><span class="n">id</span>
+            <span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_role_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">role</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_role_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_guild_role_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">guild_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">guilds</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">guild_id</span><span class="p">]</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">id</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

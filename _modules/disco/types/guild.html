@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.types.guild &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.types.guild</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.types.guild</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">holster.enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">disco.api.http</span> <span class="k">import</span> <span class="n">APIException</span>
+<span class="kn">from</span> <span class="nn">disco.util</span> <span class="k">import</span> <span class="n">to_snowflake</span>
+<span class="kn">from</span> <span class="nn">disco.types.base</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">snowflake</span><span class="p">,</span> <span class="n">listof</span><span class="p">,</span> <span class="n">dictof</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">enum</span>
+<span class="kn">from</span> <span class="nn">disco.types.user</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">disco.types.voice</span> <span class="k">import</span> <span class="n">VoiceState</span>
+<span class="kn">from</span> <span class="nn">disco.types.permissions</span> <span class="k">import</span> <span class="n">PermissionValue</span><span class="p">,</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">Permissible</span>
+<span class="kn">from</span> <span class="nn">disco.types.channel</span> <span class="k">import</span> <span class="n">Channel</span>
+
+
+<span class="n">VerificationLevel</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+    <span class="n">NONE</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">LOW</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">MEDIUM</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">HIGH</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">EXTREME</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Emoji"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Emoji">[docs]</a><span class="k">class</span> <span class="nc">Emoji</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An emoji object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The ID of this emoji.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of this emoji.</span>
+<span class="sd">    require_colons : bool</span>
+<span class="sd">        Whether this emoji requires colons to use.</span>
+<span class="sd">    managed : bool</span>
+<span class="sd">        Whether this emoji is managed by an integration.</span>
+<span class="sd">    roles : list(snowflake)</span>
+<span class="sd">        Roles this emoji is attached to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">require_colons</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">managed</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="n">snowflake</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Role"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Role">[docs]</a><span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A role object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The role ID.</span>
+<span class="sd">    name : string</span>
+<span class="sd">        The role name.</span>
+<span class="sd">    hoist : bool</span>
+<span class="sd">        Whether this role is hoisted (displayed separately in the sidebar).</span>
+<span class="sd">    managed : bool</span>
+<span class="sd">        Whether this role is managed by an integration.</span>
+<span class="sd">    color : int</span>
+<span class="sd">        The RGB color of this role.</span>
+<span class="sd">    permissions : :class:`disco.types.permissions.PermissionsValue`</span>
+<span class="sd">        The permissions this role grants.</span>
+<span class="sd">    position : int</span>
+<span class="sd">        The position of this role in the hierarchy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">hoist</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">managed</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="n">PermissionValue</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="GuildMember"><a class="viewcode-back" href="../../../api.html#disco.types.guild.GuildMember">[docs]</a><span class="k">class</span> <span class="nc">GuildMember</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A GuildMember object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user : :class:`disco.types.user.User`</span>
+<span class="sd">        The user object of this member.</span>
+<span class="sd">    guild_id : snowflake</span>
+<span class="sd">        The guild this member is part of.</span>
+<span class="sd">    mute : bool</span>
+<span class="sd">        Whether this member is server voice-muted.</span>
+<span class="sd">    deaf : bool</span>
+<span class="sd">        Whether this member is server voice-deafend.</span>
+<span class="sd">    joined_at : datetime</span>
+<span class="sd">        When this user joined the guild.</span>
+<span class="sd">    roles : list(snowflake)</span>
+<span class="sd">        Roles this member is part of.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span>
+    <span class="n">guild_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">mute</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">deaf</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">joined_at</span> <span class="o">=</span> <span class="n">datetime</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="n">snowflake</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GuildMember.get_voice_state"><a class="viewcode-back" href="../../../api.html#disco.types.guild.GuildMember.get_voice_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_voice_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[:class:`disco.types.voice.VoiceState`]</span>
+<span class="sd">            Returns the voice state for the member if they are currently connected</span>
+<span class="sd">            to the guilds voice server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_voice_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GuildMember.kick"><a class="viewcode-back" href="../../../api.html#disco.types.guild.GuildMember.kick">[docs]</a>    <span class="k">def</span> <span class="nf">kick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Kicks the member from the guild.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">guilds_members_kick</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GuildMember.ban"><a class="viewcode-back" href="../../../api.html#disco.types.guild.GuildMember.ban">[docs]</a>    <span class="k">def</span> <span class="nf">ban</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delete_message_days</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bans the member from the guild.</span>
+
+<span class="sd">        Args</span>
+<span class="sd">        ----</span>
+<span class="sd">        delete_message_days : int</span>
+<span class="sd">            The number of days to retroactively delete messages for.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">guilds_bans_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">delete_message_days</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias to the guild members user id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span></div>
+
+
+<div class="viewcode-block" id="Guild"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Guild">[docs]</a><span class="k">class</span> <span class="nc">Guild</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">Permissible</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A guild object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : snowflake</span>
+<span class="sd">        The id of this guild.</span>
+<span class="sd">    owner_id : snowflake</span>
+<span class="sd">        The id of the owner.</span>
+<span class="sd">    afk_channel_id : snowflake</span>
+<span class="sd">        The id of the afk channel.</span>
+<span class="sd">    embed_channel_id : snowflake</span>
+<span class="sd">        The id of the embed channel.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Guilds name.</span>
+<span class="sd">    icon : str</span>
+<span class="sd">        Guilds icon (as PNG binary data).</span>
+<span class="sd">    splash : str</span>
+<span class="sd">        Guilds splash image (as PNG binary data).</span>
+<span class="sd">    region : str</span>
+<span class="sd">        Voice region.</span>
+<span class="sd">    afk_timeout : int</span>
+<span class="sd">        Delay after which users are automatically moved to the afk channel.</span>
+<span class="sd">    embed_enabled : bool</span>
+<span class="sd">        Whether the guilds embed is enabled.</span>
+<span class="sd">    verification_level : int</span>
+<span class="sd">        The verification level used by the guild.</span>
+<span class="sd">    mfa_level : int</span>
+<span class="sd">        The MFA level used by the guild.</span>
+<span class="sd">    features : list(str)</span>
+<span class="sd">        Extra features enabled for this guild.</span>
+<span class="sd">    members : dict(snowflake, :class:`GuildMember`)</span>
+<span class="sd">        All of the guilds members.</span>
+<span class="sd">    channels : dict(snowflake, :class:`disco.types.channel.Channel`)</span>
+<span class="sd">        All of the guilds channels.</span>
+<span class="sd">    roles : dict(snowflake, :class:`Role`)</span>
+<span class="sd">        All of the guilds roles.</span>
+<span class="sd">    emojis : dict(snowflake, :class:`Emoji`)</span>
+<span class="sd">        All of the guilds emojis.</span>
+<span class="sd">    voice_states : dict(str, :class:`disco.types.voice.VoiceState`)</span>
+<span class="sd">        All of the guilds voice states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">owner_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">afk_channel_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">embed_channel_id</span> <span class="o">=</span> <span class="n">snowflake</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="n">icon</span> <span class="o">=</span> <span class="n">binary</span>
+    <span class="n">splash</span> <span class="o">=</span> <span class="n">binary</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">afk_timeout</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">embed_enabled</span> <span class="o">=</span> <span class="nb">bool</span>
+    <span class="n">verification_level</span> <span class="o">=</span> <span class="n">enum</span><span class="p">(</span><span class="n">VerificationLevel</span><span class="p">)</span>
+    <span class="n">mfa_level</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">listof</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">GuildMember</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">Channel</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">Role</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="n">emojis</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">Emoji</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="n">voice_states</span> <span class="o">=</span> <span class="n">dictof</span><span class="p">(</span><span class="n">VoiceState</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Guild.get_permissions"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Guild.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the permissions a user has in this guild.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.permissions.PermissionValue`</span>
+<span class="sd">            Computed permission value for the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PermissionValue</span><span class="p">(</span><span class="n">Permissions</span><span class="o">.</span><span class="n">ADMINISTRATOR</span><span class="p">)</span>
+
+        <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">PermissionValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">permissions</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">roles</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">role</span><span class="o">.</span><span class="n">permissions</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Guild.get_voice_state"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Guild.get_voice_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_voice_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attempt to get a voice state for a given user (who should be a member of</span>
+<span class="sd">        this guild).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`disco.types.voice.VoiceState`</span>
+<span class="sd">            The voice state for the user in this guild.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">to_snowflake</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_states</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="Guild.get_member"><a class="viewcode-back" href="../../../api.html#disco.types.guild.Guild.get_member">[docs]</a>    <span class="k">def</span> <span class="nf">get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attempt to get a member from a given user.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`GuildMember`</span>
+<span class="sd">            The guild member object for the given user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">to_snowflake</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">guilds_members_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">APIException</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">validate_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">member</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span>
+                <span class="n">member</span><span class="o">.</span><span class="n">guild_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="k">def</span> <span class="nf">validate_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">channel</span><span class="o">.</span><span class="n">guild_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">channel</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

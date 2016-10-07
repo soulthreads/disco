@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>disco.api.client &mdash; disco 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="disco 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> disco
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">disco</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>disco.api.client</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for disco.api.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">disco.api.http</span> <span class="k">import</span> <span class="n">Routes</span><span class="p">,</span> <span class="n">HTTPClient</span>
+<span class="kn">from</span> <span class="nn">disco.util.logging</span> <span class="k">import</span> <span class="n">LoggingClass</span>
+
+<span class="kn">from</span> <span class="nn">disco.types.user</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">disco.types.message</span> <span class="k">import</span> <span class="n">Message</span>
+<span class="kn">from</span> <span class="nn">disco.types.guild</span> <span class="k">import</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildMember</span><span class="p">,</span> <span class="n">Role</span>
+<span class="kn">from</span> <span class="nn">disco.types.channel</span> <span class="k">import</span> <span class="n">Channel</span>
+<span class="kn">from</span> <span class="nn">disco.types.invite</span> <span class="k">import</span> <span class="n">Invite</span>
+
+
+<span class="k">def</span> <span class="nf">optional</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a set of keyword arguments, creating a dictionary with only the non-</span>
+<span class="sd">    null values.</span>
+
+<span class="sd">    :returns: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="APIClient"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient">[docs]</a><span class="k">class</span> <span class="nc">APIClient</span><span class="p">(</span><span class="n">LoggingClass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An abstraction over the :class:`disco.api.http.HTTPClient` that composes requests, and fits</span>
+<span class="sd">    the models with the returned data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">APIClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span> <span class="o">=</span> <span class="n">HTTPClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+
+<div class="viewcode-block" id="APIClient.gateway"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.gateway">[docs]</a>    <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">encoding</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GATEWAY_GET</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;?v=</span><span class="si">{}</span><span class="s1">&amp;encoding=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_get"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_get">[docs]</a>    <span class="k">def</span> <span class="nf">channels_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_GET</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Channel</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_modify">[docs]</a>    <span class="k">def</span> <span class="nf">channels_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Channel</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_delete">[docs]</a>    <span class="k">def</span> <span class="nf">channels_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Channel</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_list">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">around</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">optional</span><span class="p">(</span>
+            <span class="n">around</span><span class="o">=</span><span class="n">around</span><span class="p">,</span>
+            <span class="n">before</span><span class="o">=</span><span class="n">before</span><span class="p">,</span>
+            <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span>
+        <span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Message</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_get"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_get">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_GET</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Message</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_create">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">nonce</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+            <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="n">nonce</span><span class="p">,</span>
+            <span class="s1">&#39;tts&#39;</span><span class="p">:</span> <span class="n">tts</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">Message</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_modify">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_MODIFY</span><span class="p">,</span>
+                <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">),</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">content</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">Message</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_delete">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_messages_delete_bulk"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_messages_delete_bulk">[docs]</a>    <span class="k">def</span> <span class="nf">channels_messages_delete_bulk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_MESSAGES_DELETE_BULK</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;messages&#39;</span><span class="p">:</span> <span class="n">messages</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_permissions_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_permissions_modify">[docs]</a>    <span class="k">def</span> <span class="nf">channels_permissions_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span> <span class="n">allow</span><span class="p">,</span> <span class="n">deny</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_PERMISSIONS_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;allow&#39;</span><span class="p">:</span> <span class="n">allow</span><span class="p">,</span>
+            <span class="s1">&#39;deny&#39;</span><span class="p">:</span> <span class="n">deny</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">typ</span><span class="p">,</span>
+        <span class="p">})</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_permissions_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_permissions_delete">[docs]</a>    <span class="k">def</span> <span class="nf">channels_permissions_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_PERMISSIONS_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_invites_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_invites_list">[docs]</a>    <span class="k">def</span> <span class="nf">channels_invites_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_INVITES_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Invite</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_invites_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_invites_create">[docs]</a>    <span class="k">def</span> <span class="nf">channels_invites_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">86400</span><span class="p">,</span> <span class="n">max_uses</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">temporary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_INVITES_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;max_age&#39;</span><span class="p">:</span> <span class="n">max_age</span><span class="p">,</span>
+            <span class="s1">&#39;max_uses&#39;</span><span class="p">:</span> <span class="n">max_uses</span><span class="p">,</span>
+            <span class="s1">&#39;temporary&#39;</span><span class="p">:</span> <span class="n">temporary</span><span class="p">,</span>
+            <span class="s1">&#39;unique&#39;</span><span class="p">:</span> <span class="n">unique</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">Invite</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_pins_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_pins_list">[docs]</a>    <span class="k">def</span> <span class="nf">channels_pins_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_PINS_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Message</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_pins_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_pins_create">[docs]</a>    <span class="k">def</span> <span class="nf">channels_pins_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_PINS_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.channels_pins_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.channels_pins_delete">[docs]</a>    <span class="k">def</span> <span class="nf">channels_pins_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">CHANNELS_PINS_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_get"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_get">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_GET</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Guild</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_modify">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Guild</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_delete">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Guild</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_channels_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_channels_list">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_channels_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_CHANNELS_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Channel</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_channels_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_channels_create">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_channels_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_CHANNELS_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Channel</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_channels_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_channels_modify">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_channels_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_CHANNELS_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">channel</span><span class="p">,</span>
+            <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="p">})</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_members_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_members_list">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_members_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_MEMBERS_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">GuildMember</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_members_get"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_members_get">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_members_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILD_MEMBERS_GET</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="o">=</span><span class="n">member</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">GuildMember</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_members_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_members_modify">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_members_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILD_MEMBERS_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="o">=</span><span class="n">member</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_members_kick"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_members_kick">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_members_kick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILD_MEMBERS_KICK</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">member</span><span class="o">=</span><span class="n">member</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_bans_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_bans_list">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_bans_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILD_BANS_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_bans_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_bans_create">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_bans_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">delete_message_days</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_BANS_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;delete-message-days&#39;</span><span class="p">:</span> <span class="n">delete_message_days</span><span class="p">,</span>
+        <span class="p">})</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_bans_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_bans_delete">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_bans_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_BANS_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_roles_list"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_roles_list">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_roles_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_ROLES_LIST</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Role</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_roles_create"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_roles_create">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_roles_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_ROLES_CREATE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Role</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_roles_modify_batch"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_roles_modify_batch">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_roles_modify_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">roles</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_ROLES_MODIFY_BATCH</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">roles</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Role</span><span class="o">.</span><span class="n">create_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_roles_modify"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_roles_modify">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_roles_modify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_ROLES_MODIFY</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Role</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="APIClient.guilds_roles_delete"><a class="viewcode-back" href="../../../api.html#disco.api.client.APIClient.guilds_roles_delete">[docs]</a>    <span class="k">def</span> <span class="nf">guilds_roles_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="p">(</span><span class="n">Routes</span><span class="o">.</span><span class="n">GUILDS_ROLES_DELETE</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">guild</span><span class="o">=</span><span class="n">guild</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Andrei Zbikowski.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
