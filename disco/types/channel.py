@@ -244,6 +244,12 @@ class Channel(SlottedModel, Permissible):
     def create_webhook(self, name=None, avatar=None):
         return self.client.api.channels_webhooks_create(self.id, name, avatar)
 
+    def send_typing(self):
+        """
+        Indicate typing on a channel for 10 seconds
+        """
+        self.client.api.channels_typing(self.id)
+
     def send_message(self, content, nonce=None, tts=False, attachment=None, embed=None):
         """
         Send a message in this channel.
