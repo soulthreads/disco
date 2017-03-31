@@ -98,13 +98,15 @@ class VoiceClient(LoggingClass):
         # State
         self.state = VoiceState.DISCONNECTED
         self.connected = gevent.event.Event()
+        self.session_id = None
         self.token = None
         self.endpoint = None
         self.ssrc = None
         self.port = None
         self.udp = None
 
-        self.update_listener = None
+        self.state_update_listener = None
+        self.server_update_listener = None
 
         # Websocket connection
         self.ws = None
@@ -159,6 +161,11 @@ class VoiceClient(LoggingClass):
         self.state = VoiceState.CONNECTED
         self.connected.set()
 
+    def on_voice_state_update(self, data):
+        if self.session_id:
+            return
+        self.session_id = data.session_id
+
     def on_voice_server_update(self, data):
         if self.channel.guild_id != data.guild_id or not data.token:
             return
@@ -170,42 +177,47 @@ class VoiceClient(LoggingClass):
         self.state = VoiceState.AUTHENTICATING
 
         self.endpoint = data.endpoint.split(':', 1)[0]
-        self.ws = Websocket(
-            'wss://' + self.endpoint,
-            on_message=self.on_message,
-            on_error=self.on_error,
-            on_open=self.on_open,
-            on_close=self.on_close,
-        )
+        self.ws = Websocket('wss://' + self.endpoint)
+        self.ws.emitter.on('on_open', self.on_open)
+        self.ws.emitter.on('on_error', self.on_error)
+        self.ws.emitter.on('on_close', self.on_close)
+        self.ws.emitter.on('on_message', self.on_message)
         self.ws.run_forever()
 
-    def on_message(self, _, msg):
+    def on_message(self, msg):
         try:
             data = self.encoder.decode(msg)
             self.packets.emit(VoiceOPCode[data['op']], data['d'])
         except:
             self.log.exception('Failed to parse voice gateway message: ')
 
-    def on_error(self, _, err):
+    def on_error(self, err):
         # TODO
         self.log.warning('Voice websocket error: {}'.format(err))
 
-    def on_open(self, _):
+    def on_open(self):
         self.send(VoiceOPCode.IDENTIFY, {
             'server_id': self.channel.guild_id,
             'user_id': self.client.state.me.id,
-            'session_id': self.client.gw.session_id,
+            'session_id': self.session_id,
             'token': self.token
         })
 
-    def on_close(self, _, code, error):
+    def on_close(self, code, error):
         # TODO
         self.log.warning('Voice websocket disconnected (%s, %s)', code, error)
 
     def connect(self, timeout=5, mute=False, deaf=False):
         self.state = VoiceState.AWAITING_ENDPOINT
 
-        self.update_listener = self.client.events.on('VoiceServerUpdate', self.on_voice_server_update)
+        self.state_update_listener = self.client.events.on(
+            'VoiceStateUpdate',
+            self.on_voice_state_update
+        )
+        self.server_update_listener = self.client.events.on(
+            'VoiceServerUpdate',
+            self.on_voice_server_update
+        )
 
         self.client.gw.send(OPCode.VOICE_STATE_UPDATE, {
             'self_mute': mute,
