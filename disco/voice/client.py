@@ -34,7 +34,6 @@ class VoiceException(Exception):
         self.voice_client = client
         super(VoiceException, self).__init__(msg)
 
-
 class UDPVoiceClient(LoggingClass):
     def __init__(self, vc):
         super(UDPVoiceClient, self).__init__()
@@ -44,8 +43,22 @@ class UDPVoiceClient(LoggingClass):
         self.port = None
         self.run_task = None
         self.connected = False
-        self.sequence = 0
-        self.timestamp = 0
+        self._sequence = 0
+        self._timestamp = 0
+
+    @property
+    def sequence(self):
+        return self._sequence
+    @sequence.setter
+    def sequence(self, sequence):
+        self._sequence = sequence % (2 ** 16)
+
+    @property
+    def timestamp(self):
+        return self._timestamp
+    @timestamp.setter
+    def timestamp(self, timestamp):
+        self._timestamp = timestamp % (2 ** 32)
 
     def run(self):
         while True:
