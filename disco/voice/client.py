@@ -25,7 +25,6 @@ VoiceState = Enum(
 )
 
 # TODO:
-#   - player implementation
 #   - cleanup
 
 
