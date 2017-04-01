@@ -12,6 +12,8 @@ from disco.util.logging import LoggingClass
 from disco.voice.packets import VoiceOPCode
 from disco.gateway.packets import OPCode
 
+import libnacl.secret
+
 VoiceState = Enum(
     DISCONNECTED=0,
     AWAITING_ENDPOINT=1,
@@ -24,7 +26,6 @@ VoiceState = Enum(
 
 # TODO:
 #   - player implementation
-#   - encryption
 #   - cleanup
 
 
@@ -43,6 +44,8 @@ class UDPVoiceClient(LoggingClass):
         self.port = None
         self.run_task = None
         self.connected = False
+        self.sequence = 0
+        self.timestamp = 0
 
     def run(self):
         while True:
@@ -50,6 +53,24 @@ class UDPVoiceClient(LoggingClass):
 
     def send(self, data):
         self.conn.sendto(data, (self.ip, self.port))
+
+    def send_encrypted(self, data):
+        header = bytearray(12)
+        header[0] = 0x80
+        header[1] = 0x78
+        struct.pack_into(
+            '>HII',
+            header,
+            2,
+            self.sequence,
+            self.timestamp,
+            self.vc.ssrc,
+        )
+        nonce = bytearray(24)
+        nonce[:12] = header
+        box = libnacl.secret.SecretBox(bytes(self.vc.secret_key))
+        _, ciphertext = box.encrypt(bytes(data), bytes(nonce), pack_nonce=False)
+        self.send(header + ciphertext)
 
     def disconnect(self):
         self.run_task.kill()
@@ -104,6 +125,7 @@ class VoiceClient(LoggingClass):
         self.ssrc = None
         self.port = None
         self.udp = None
+        self.secret_key = None
 
         self.state_update_listener = None
         self.server_update_listener = None
@@ -148,11 +170,12 @@ class VoiceClient(LoggingClass):
             'data': {
                 'port': port,
                 'address': ip,
-                'mode': 'plain'
+                'mode': 'xsalsa20_poly1305'
             }
         })
 
-    def on_voice_sdp(self, _):
+    def on_voice_sdp(self, data):
+        self.secret_key = data['secret_key']
         # Toggle speaking state so clients learn of our SSRC
         self.set_speaking(True)
         self.set_speaking(False)
