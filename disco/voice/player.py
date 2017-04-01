@@ -15,6 +15,7 @@ class StreamPlayer(LoggingClass):
         self.stop_event = Event()
 
     def run(self):
+        self.vc.set_speaking(True)
         start = time.time()
         delta = 0
         while not self.stop_event.is_set():
@@ -28,6 +29,7 @@ class StreamPlayer(LoggingClass):
             self.vc.udp.timestamp += self.encoder.frame_size
             delta += self.encoder.frame_length
             gevent.sleep(start + delta / 1000 - time.time())
+        self.vc.set_speaking(False)
 
     def stop(self):
         self.stop_event.set()
