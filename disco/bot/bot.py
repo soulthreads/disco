@@ -7,6 +7,7 @@ import importlib
 from six.moves import reload_module
 from holster.threadlocal import ThreadLocal
 
+from disco.types.base import UNSET
 from disco.types.guild import GuildMember
 from disco.bot.plugin import Plugin
 from disco.bot.command import CommandEvent, CommandLevels
@@ -361,6 +362,10 @@ class Bot(LoggingClass):
         self.handle_message(event.message)
 
     def on_message_update(self, event):
+        # edited_timestamp is not set when message hasn't been actually edited
+        # and is updated because of an embed
+        if event.message.edited_timestamp is UNSET:
+            return
         if self.config.commands_allow_edit:
             obj = self.last_message_cache.get(event.message.channel_id)
             if not obj:
