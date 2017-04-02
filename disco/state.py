@@ -81,7 +81,7 @@ class State(object):
         Weak mapping of all known/loaded Channels
     users : dict(snowflake, :class:`disco.types.user.User`)
         Weak mapping of all known/loaded Users
-    voice_states : dict(str, :class:`disco.types.voice.VoiceState`)
+    voice_states : dict((snowflake, str), :class:`disco.types.voice.VoiceState`)
         Weak mapping of all known/active Voice States
     messages : Optional[dict(snowflake, :class:`deque`)]
         Mapping of channel ids to deques containing :class:`StackMessage` objects
@@ -187,7 +187,7 @@ class State(object):
             self.users[member.user.id] = member.user
 
         for voice_state in six.itervalues(event.guild.voice_states):
-            self.voice_states[voice_state.session_id] = voice_state
+            self.voice_states[(event.guild.id, voice_state.session_id)] = voice_state
 
         if self.config.sync_guild_members:
             event.guild.sync()
@@ -228,22 +228,23 @@ class State(object):
             del self.dms[event.channel.id]
 
     def on_voice_state_update(self, event):
+        state_id = (event.state.guild_id, event.state.session_id)
         # Existing connection, we are either moving channels or disconnecting
-        if event.state.session_id in self.voice_states:
+        if state_id in self.voice_states:
             # Moving channels
             if event.state.channel_id:
-                self.voice_states[event.state.session_id].update(event.state)
+                self.voice_states[state_id].update(event.state)
             # Disconnection
             else:
                 if event.state.guild_id in self.guilds:
                     if event.state.session_id in self.guilds[event.state.guild_id].voice_states:
                         del self.guilds[event.state.guild_id].voice_states[event.state.session_id]
-                del self.voice_states[event.state.session_id]
+                del self.voice_states[state_id]
         # New connection
         elif event.state.channel_id:
             if event.state.guild_id in self.guilds:
                 self.guilds[event.state.guild_id].voice_states[event.state.session_id] = event.state
-            self.voice_states[event.state.session_id] = event.state
+            self.voice_states[state_id] = event.state
 
     def on_guild_member_add(self, event):
         if event.member.user.id not in self.users:
