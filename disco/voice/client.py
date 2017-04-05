@@ -61,7 +61,9 @@ class UDPVoiceClient(LoggingClass):
 
     def run(self):
         while True:
-            self.conn.recvfrom(4096)
+            buffer = self.conn.recvfrom(4096)
+            if self.vc.receiver:
+                self.vc.receiver.receive(buffer[0])
 
     def send(self, data):
         self.conn.sendto(data, (self.ip, self.port))
@@ -141,6 +143,8 @@ class VoiceClient(LoggingClass):
 
         self.state_update_listener = None
         self.server_update_listener = None
+
+        self.receiver = None
 
         # Websocket connection
         self.ws = None
