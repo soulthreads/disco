@@ -129,6 +129,7 @@ class VoiceClient(LoggingClass):
         self.packets = Emitter(gevent.spawn)
         self.packets.on(VoiceOPCode.READY, self.on_voice_ready)
         self.packets.on(VoiceOPCode.SESSION_DESCRIPTION, self.on_voice_sdp)
+        self.packets.on(VoiceOPCode.SPEAKING, self.on_speaking)
 
         # State
         self.state = VoiceState.DISCONNECTED
@@ -145,6 +146,8 @@ class VoiceClient(LoggingClass):
         self.server_update_listener = None
 
         self.receiver = None
+        # mapping of ssrc to user id
+        self.users = dict()
 
         # Websocket connection
         self.ws = None
@@ -199,6 +202,10 @@ class VoiceClient(LoggingClass):
 
         self.state = VoiceState.CONNECTED
         self.connected.set()
+
+    def on_speaking(self, data):
+        if data['ssrc'] not in self.users:
+            self.users[data['ssrc']] = int(data['user_id'])
 
     def on_voice_state_update(self, data):
         if self.session_id:
