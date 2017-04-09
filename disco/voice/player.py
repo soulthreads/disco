@@ -52,9 +52,10 @@ def open_ffmpeg_player(vc, filename):
             '-ac', '2',
             '-ar', '48000',
             '-acodec', 'pcm_s16le',
+            '-nostdin',
+            '-loglevel', 'fatal',
             '-'
         ],
-        stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL) # maybe redirect it into some file?
+    )
     return ProcessPlayer(vc, ffmpeg)
