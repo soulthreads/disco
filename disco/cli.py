@@ -61,8 +61,10 @@ def disco_main(run=False):
         AutoSharder(config).run()
         return
 
-    # TODO: make configurable
-    setup_logging(level=logging.INFO)
+    if hasattr(config, 'logging_format'):
+        setup_logging(level=logging.INFO, format=config.logging_format)
+    else:
+        setup_logging(level=logging.INFO)
 
     client = Client(config)
 
